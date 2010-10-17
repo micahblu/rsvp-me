@@ -1,0 +1,151 @@
+@charset "utf-8";
+/* CSS Document */
+
+/* rsvp event calendar styles */
+
+#rsvp_me_event_calendar{
+	
+}
+
+#rsvp_me_event_calendar a.prev{
+	position:absolute;
+	left: 0px;
+	top:5px;
+}	
+
+#rsvp_me_event_calendar a.next{
+	position:absolute;
+	right: 0px;
+	top:5px;
+}	
+
+#rsvp_calendar_head{
+	width:100%;
+	text-align:center;
+	position:relative;
+}
+
+div.rsvp_me_calendar h1, h2, h3, h4, h5{
+	
+	
+}
+
+div.rsvp_me_calendar table{
+	border-collapse:collapse;
+	width: 100%;
+}
+
+div.rsvp_me_calendar table tr{
+	
+}
+
+div.rsvp_me_calendar table tr th.calendar-day-head{
+	background: #ccc;
+	text-align:center;
+}
+
+
+div.rsvp_me_calendar table tr th{
+
+}
+
+div.rsvp_me_calendar table tr td{
+	text-align:center;
+}
+
+div.rsvp_me_calendar table tr td.calendar-today{
+	
+	background: #f2f2f2;
+	font-weight:bold;
+	border: 1px solid #ccc;
+	margin:1px;
+}
+
+div.rsvp_me_calendar table tr td div.event-day{
+	background: #ffffcc;
+	border: 1px solid #ccc;
+	cursor:pointer;
+	margin:1px;
+}
+
+/* rsvp form styles */
+
+div.rsvp-form{
+	font-size:14px;
+}
+
+div.overlay-content{
+	padding: 50px;
+}
+
+div.rsvp-form h1{ font-size: 20px; }
+div.rsvp-form h2{ font-size: 18px; }
+div.rsvp-form h3{ font-size: 16px; }
+div.rsvp-form h4{ font-size: 15px; }
+
+
+div.rsvp-form input, textarea{
+	padding:5px;
+	color:#666666;
+	font-weight:500;
+}
+
+/* Admin styles */
+
+div.form-segments{
+	margin-bottom:25px;
+	display:block;	
+	width: 450px;
+	padding-bottom:20px;	
+	border-bottom: 1px solid #CCC;
+}
+
+#admin-events-wrapper{
+	
+}
+
+#admin-events-wrapper table{
+	
+}
+
+#admin-events-wrapper table tr{
+
+}
+
+#admin-events-wrapper table tr th{
+	text-align:left;
+	padding:10px;
+}
+
+#admin-events-wrapper table tr td{
+	text-align:left;
+	padding:10px;
+}
+
+#admin-events-wrapper table tr.event_rsvps{
+	background: white;
+}
+
+
+/* Inline Calendar Styles */
+
+div#dyncal{
+	padding:5px;
+	background:#f2f2f2;
+	border:1px solid #ccc;
+}
+
+#dyncal table tr td{
+	padding:3px;
+}
+
+
+#dyncal table tr td div.nonselectable{
+	background: #f2f2f2;	
+	color:#ccc;
+}
+
+#dyncal table tr td div.selectable{
+	cursor:pointer;	
+	background:#ffffcc;
+}
