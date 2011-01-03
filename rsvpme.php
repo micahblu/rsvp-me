@@ -102,7 +102,7 @@ if( is_admin() ){
 	
 }else{
 	
-	/* front end scripts */
+	/* web visitor scripts */
 	add_action('wp_head', 'add_to_header');	
 	
 	add_action('init', 'rsvp_init_header');
