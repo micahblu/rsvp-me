@@ -135,7 +135,7 @@ function build_rsvp_form($event){
 function rsvp_me_get_events($month, $year){
 	global $wpdb;
 	
-	$events; //events array that will be returned with ymd date as key
+	$events = array(); //events array that will be returned with ymd date as key
 	
 	$rows = $wpdb->get_results("SELECT *, DATE(event_date_time) AS ymd FROM " . $wpdb->prefix . "rsvp_me_events 
 								   WHERE MONTH(event_date_time) = '$month'

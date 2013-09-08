@@ -138,9 +138,6 @@ function submit_rsvp(){
 		echo "success|";
 	}
 	
-	//return true;
-	
+	//return true;	
 }
-
-
 ?>

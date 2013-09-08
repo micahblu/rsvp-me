@@ -1,6 +1,6 @@
 === Plugin Name ===
 Contributors: micahblu
-Donate link: http://bluprintsmedia.net/blog/?post_id=17
+Donate link: http://micahblu.com/products/rsvp-me
 Tags: rsvp plugin, rsvp widget, event, rsvp events, rsvp calendar
 Requires at least: 2.0.2
 Tested up to: 3.5.1
