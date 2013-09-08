@@ -1,8 +1,10 @@
 <?php
-/*
-RSVP ME functions 
-Author: Micah Blu
-*/
+/**
+ * RSVP ME functions 
+ * Author: Micah Blu
+ * 
+ * Meat & Potatos, most of the functions that make this work :)
+ */
 
 function rsvp_me_install(){
 
@@ -76,18 +78,19 @@ function rsvp_me_install(){
 }
 
 function build_rsvp_form($event){
+
 	?>
     <div id="rsvp_form_<?= $event['id'] ?>" class="rsvp-form" style='display:none'>
-    	<h2><?= stripslashes($event['title']) ?></h2>
+    	<h2 id="rsvpEventTitle"><?= stripslashes($event['title']) ?></h2>
         <p><?= stripslashes($event['description']) ?></p>
         
-        <p>&nbsp;</p>
+      	<br />
         <h3>Venue: <?= stripslashes($event['venue']) ?></h3>
     
         <?= $event['address'] . "<br />" . $event['city'] . ", " . $event['state'] . " " . $event['zip'] ?> 
-        </p>
         
-        <br /><br />
+        
+        <br />
         
         <h3>Are you coming? Then RSVP below!</h3>
         <br />
@@ -95,7 +98,7 @@ function build_rsvp_form($event){
         
         <input type='hidden' name='event_id' value='<?= $event['id'] ?>' />
         
-    	 <table cellpadding="5" cellpadding="0" border="0">
+    	 <table cellpadding="5" cellspacing="0" border="0">
         
         	<tr>
             	<td>First name</td><td><input type='text' name='fname' value='' /></td>
@@ -137,8 +140,16 @@ function rsvp_me_get_events($month, $year){
 	$rows = $wpdb->get_results("SELECT *, DATE(event_date_time) AS ymd FROM " . $wpdb->prefix . "rsvp_me_events 
 								   WHERE MONTH(event_date_time) = '$month'
 								   AND YEAR(event_date_time) = '$year'; ", ARRAY_A);
-	foreach($rows as $row){
-		$events[$row['ymd']] = $row;
+	foreach($rows as $row)
+	{
+	
+		if(!isset($events[$row['ymd']]))
+		{
+			$events[$row['ymd']] = array();
+		}
+		// we use an array here to account for possibility of multiple events for this day
+		// added 4-23-12 per recommendation by Vegard Kamben of Norway!
+		array_push($events[$row['ymd']], $row);
 	}
 	
 	return $events;
@@ -154,24 +165,20 @@ function rsvp_me_get_respondents($id){
 }
 
 function rsvp_me_calendar_widget($options){
-
 	/* output calendar widget */
 	?>
-    <li class="widget">
-    	<h2 class="widgettitle">Event Calendar</h2>
-        <div id='rsvp_me_calendar_widget'>   
-        	<? rsvp_me_draw_calendar(NULL) ?>
-		</div>
-    </li>
+
+	<h2 class="widgettitle">Event Calendar</h2>
+	<div id='rsvp_me_calendar_widget'>   
+		<? rsvp_me_draw_calendar(NULL) ?>
+	</div><!-- #rsvp_me_calendar_widget -->
 	<?
 }
 
 function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 	
-	/* 
-	Awesome php calendar based on David Walsh's - http://davidwalsh.name/php-calendar, Thanks David! 
-	
-	Additions by Micah Blu:
+	/* 	
+	Changelog:
 		-added div wrapper
 		-added months array and header
 		-added settings array that can be passed to allow manipulation of basic calendar settings like classname & day headers
@@ -183,7 +190,6 @@ function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 	*/
 	
 	$year = $year ? $year : date("Y"); //default to current year
-	 
 	$month = $month ? $month : date("n"); //default to current month
 	
 	//we'll need to grab events for this year/month
@@ -230,40 +236,72 @@ function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 	endfor;
 
 	/* keep going with days.... */
-	for($list_day = 1; $list_day <= $days_in_month; $list_day++):
-		
+	for($list_day = 1; $list_day <= $days_in_month; $list_day++)
+	{
+
 		//assess current ymd
 		$current_ymd = $year . "-" . ($month < 10 ? "0" . $month : $month) . "-" . ($list_day < 10 && strlen($list_day) < 2 ? "0" . $list_day : $list_day);
 		
 		$is_today = $today == $current_ymd ? true : false;
 		
-		$td_action = isset($events[$current_ymd]) ? 'onclick="rsvpMe.showEvent(' . $events[$current_ymd]['id'] . ')"' : '';
-				
-		$calendar.= '<td class="' . ($is_today ? 'calendar-today' : 'calendar-day') . ' ' . (isset($events[$current_ymd]) ? "event-day" : "") . '" ' . $td_action .'>';
-
-			/** check for events !! **/
+		// determine if there are is just one event for this day or multiple
+		$hasMultipleEvents = isset($events[$current_ymd]) && count($events[$current_ymd]) > 1 ? true : false;
+		
+		if($hasMultipleEvents)
+		{
+			//build array of id's/titles to be used by showMultipleEvents
+			$jsObjects = array(); 
+			foreach($events[$current_ymd] as $event)
+			{
+				$jsObjects[] = "{ id : " . $event["id"] . ", title : '" . $event["title"] . "' }";
+			}
+			$td_action = 'onclick="rsvpMe.showMultipleEvents([' . implode(",", $jsObjects) . '])"';	
+			$calendar .= '<td class="' . ($is_today ? 'calendar-today' : 'calendar-day') . ' ' . "multi-event-day" . '" ' . $td_action .'>';
+		}else
+		{
+			$td_action = isset($events[$current_ymd]) ? 'onclick="rsvpMe.showEvent(' . $events[$current_ymd][0]['id'] . ')"' : '';
+			$calendar.= '<td class="' . ($is_today ? 'calendar-today' : 'calendar-day') . ' ' . (isset($events[$current_ymd]) ? "event-day" : "") . '" ' . $td_action .'>';
+		}
+		
+		
+		/** check for events !! **/
+		if(isset($events[$current_ymd]))
+		{
+			if($hasMultipleEvents)
+			{
+				foreach($events[$current_ymd] as $event)
+				{
+					build_rsvp_form($event);
+				}
+			}
+			else
+			{
+				build_rsvp_form($events[$current_ymd][0]);
+			}
+		}
+		//die();
+		
+		/* add in the day number */
+		$calendar.= '<div class="day-number">'.$list_day.'</div>';
+		$calendar.= '</td>';
+		
+		if($running_day == 6)
+		{
 			
-			if($events[$current_ymd]){
-				// append the hidden forms to the DOM
-				build_rsvp_form($events[$current_ymd]);
+			$calendar.= '</tr>';
+			
+			if(($day_counter+1) != $days_in_month)
+			{
+				$calendar.= '<tr class="calendar-row">';
 			}
 			
-			/* add in the day number */
-			$calendar.= '<div class="day-number">'.$list_day.'</div>';
-			
-			//$calendar.= $today;
-			
-		$calendar.= '</td>';
-		if($running_day == 6):
-			$calendar.= '</tr>';
-			if(($day_counter+1) != $days_in_month):
-				$calendar.= '<tr class="calendar-row">';
-			endif;
 			$running_day = -1;
 			$days_in_this_week = 0;
-		endif;
+		}
+		
 		$days_in_this_week++; $running_day++; $day_counter++;
-	endfor;
+		
+	}
 
 	/* finish the rest of the days in the week */
 	if($days_in_this_week < 8):
@@ -375,7 +413,7 @@ function rsvp_me_event_form($handle, $event=NULL){
 	   
 		<form action="" method="post" name="">
 		
-        <?= $handle=='edit' ? "<input type='hidden' name='id' value='" . $event["id"] ."' />\n" : "" ?>
+        <?php echo $handle=='edit' ? "<input type='hidden' name='id' value='" . $event["id"] ."' />\n" : "" ?>
         
 		<div class='form-segments'>
 		<p>What's the event?</p>
@@ -383,11 +421,11 @@ function rsvp_me_event_form($handle, $event=NULL){
 		<table cellpadding="10" cellpadding="5">
 			
 			<tr>
-				<td>Event title</td><td><input type='text' id='text' name='title' value='<?=stripslashes($event['title'])?>' /></td>
+				<td>Event title</td><td><input type='text' id='text' name='title' value='<?php echo stripslashes($event['title'])?>' /></td>
 			</tr>
 			
 			<tr>
-				<td>Event description</td><td><textarea name='description' id='description' style='width:275px; height:75px'><?=stripslashes($event['description'])?></textarea></td>
+				<td>Event description</td><td><textarea name='description' id='description' style='width:275px; height:75px'><?php echo stripslashes($event['description'])?></textarea></td>
 			</tr>
 			
 		</table>
@@ -399,7 +437,7 @@ function rsvp_me_event_form($handle, $event=NULL){
 			<tr>
 				<td>
 				Date<br />
-				<input type="text" onclick="cal.appendCalendar(this, '400', '300', '<?= PLUGIN_PATH ?>')" name="date" readonly="readonly" size='10' maxlength="10" value="<?=$date?>" title="calfield" class='reqd' />
+				<input type="text" onclick="cal.appendCalendar(this, '400', '300', '<?php echo PLUGIN_PATH ?>')" name="date" readonly="readonly" size='10' maxlength="10" value="<?php echo $date?>" title="calfield" class='reqd' />
 				</td>
 			
 				<td>

@@ -74,10 +74,43 @@ div.rsvp_me_calendar table tr td.event-day{
 	font-weight:bold;
 }
 
+div.rsvp_me_calendar table tr td.multi-event-day{
+	background: #ffffcc;
+	cursor:pointer;
+	font-weight:bold;
+}
+
 /* rsvp form styles */
 
 div.rsvp-form{
 	font-size:14px;
+	top: 25px;
+}
+
+#rsvpEventTitle{
+	font-weight: bold;
+}
+
+#rsvpMultiTabHeader{
+	padding-bottom: 0px;
+	clear:both;
+}
+
+div.rsvp-form ul{
+	margin: 0px;
+	margin-top: 10px;
+	padding-bottom: 35px;
+}
+
+.rsvp-line-break{
+	border-bottom: 3px solid #333;
+}
+
+div.rsvp-form ul li{
+	float:left;
+	cursor:pointer;
+	margin-right: 25px;
+	list-style:none;
 }
 
 div.overlay-content{

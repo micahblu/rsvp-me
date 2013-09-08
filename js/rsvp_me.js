@@ -1,17 +1,8 @@
-/*
-Javascript methods for RSVP Me
-
-Plugin Name: RSVP Me
-Plugin URI: http://bluprintsmedia.net/rsvpme
-Description: Event Calendar that allows users to RSVP to the selected event.
-Version: 0.5
-Author: Micah Blu
-Author URI: http://www.bluprintsmedia.net
-License: GPL2
-
-Notes:
-  -Some methods used here rely on jquery.
-*/
+/**
+ * Main js file
+ * 
+ * @dep jquery
+ */
 
 var rsvpMe = {
 	
@@ -33,6 +24,52 @@ var rsvpMe = {
 			theform["lname"].value = rsvpCookie.lname;
 			theform["email"].value = rsvpCookie.email;
 		}
+	},
+	
+	showMultipleEvents : function(events){
+		//triggered when mousing over calendar event
+
+		var html = "<div id='multipleRsvpEvents' class='rsvp-form'>\n";
+		//build tabs
+		html += "<div id='rsvpMultiTabHeader'>\n";
+		html += "<h2>Multiple Events:</h2>\n";
+		html += "<select onchange='rsvpMe.showMultiEvent(this)'>\n";
+		for(var i=0; i < events.length; i++){
+			html += "<option value='"  + events[i].id + "'>" + events[i].title + "</option>\n";
+		}
+		html += "</select>\n";
+		html += "</div>\n";
+		var first = true;
+		for(var i=0; i < events.length; i++){
+			
+			html += "<div id='rsvpMultiEvent_"+events[i].id+"' class='rsvp-multi-event' style='display:" + (first==true ? 'block' : 'none') + "'>\n";
+			html += $("#rsvp_form_"+events[i].id).html();
+			html += "</div><!-- .rsvp-multi-event -->\n";
+			first = false;
+		}
+	
+		mybox.overlay(html, $("#rsvp_form_"+events[0].id).width() + 100, $("#rsvp_form_"+events[0].id).height() + 100); //arbitrary 100 added as padding, obviously not ideal, but will do for now 
+		
+		//now that our overlay is up let's check to see if we remember this user
+		var theform;
+		if(rsvpCookie.fname){
+			for(var i=0; i < events.length; i++){
+				theform = document.getElementById("rsvp_form_"+events[i].id);
+				theform["fname"].value = rsvpCookie.fname;
+				theform["lname"].value = rsvpCookie.lname;
+				theform["email"].value = rsvpCookie.email;
+				
+			}
+		}
+	},
+	
+	showMultiEvent : function(sel){
+		var id = sel.options[sel.selectedIndex].value;
+		
+		$(".rsvp-multi-event").hide();
+		$("#rsvpMultiEvent_"+id).show();
+		//alert($("#rsvpMultiEvent_"+id).html());
+		
 	},
 	
 	cancel : function(){
@@ -96,7 +133,6 @@ var rsvpMe = {
 		else{
 			
 			/* submit data via an ajax request */
-			
 			var preloader = new Image();
 			preloader.src = plugin_path + "/images/ajax-loader-inline.gif";
 			
@@ -280,15 +316,27 @@ var mybox = {
 	
 	contentDiv : {},
 	
+	clickedArea : "",
+	
 	overlay : function(html, width, height){
 		
 		this.overlayDiv = document.createElement("div");
 		
 		this.overlayDiv.style.position = "absolute";
-		this.overlayDiv.style.width = getWindowWidth() + "px";
-		this.overlayDiv.style.height = "1000%";
-		this.overlayDiv.style.zIndex = "999";
+		this.overlayDiv.style.top = "0px";
+		this.overlayDiv.style.left = "0px";
+		this.overlayDiv.style.width = $(document).width() + "px";
+		this.overlayDiv.style.height = $(document).height() + "px";
+		this.overlayDiv.style.zIndex = "99999";
 		this.overlayDiv.style.background = "url(" + plugin_path + "/images/overlay_bg.png) repeat top left";
+		
+		this.overlayDiv.onclick = function(){
+			if(mybox.clickedArea == "content"){
+				mybox.clickedArea = ""; //reset clicked area
+			}else{
+				mybox.closebox();
+			}
+		}
 		
 		document.body.insertBefore(this.overlayDiv, document.body.firstChild);	
 		
@@ -301,15 +349,21 @@ var mybox = {
 		this.contentDiv.style.padding = "35px";
 		this.contentDiv.style.position = "relative";
 		this.contentDiv.style.margin = "0px auto";
+		this.overlayDiv.style.zIndex = "99999999";
 		this.contentDiv.style.marginTop = ( (getWindowHeight() - height) / 2 ) + "px";
 		
 		this.contentDiv.innerHTML = html;
+		
+		this.contentDiv.onclick = function(){
+			mybox.clickedArea = "content";
+			//mybox.closebox();
+		}
 		
 		this.overlayDiv.appendChild(this.contentDiv);
 	},
 	
 	closebox : function(){
-		
+
 		this.overlayDiv.removeChild(this.contentDiv);
 		
 		document.body.removeChild(this.overlayDiv);

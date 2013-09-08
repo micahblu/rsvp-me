@@ -1,15 +1,15 @@
 <?php
 /*
 Plugin Name: RSVP Me
-Plugin URI: http://www.bluprintsmedia.net/
+Plugin URI: http://www.micahblu.com/
 Description: Event Calendar that allows users to RSVP to the selected event.
-Version: 0.5
+Version: 1.0.1
 Author: Micah Blu
-Author URI: http://www.bluprintsmedia.net/blog/?page_id=17
+Author URI: http://www.micahblu.com
 License: GPL2
 */
 
-define('RSVP_ME_VERSION', '0.5');
+define('RSVP_ME_VERSION', '1.0.1');
 
 define('RSVP_ME_FILE_PATH', dirname(__FILE__));
 
@@ -60,7 +60,6 @@ function rsvp_init_header(){
 	
 function add_to_header(){
 	//add neccessarry scripts & styles
-
 	?>
     <script type='text/javascript'>
 		
