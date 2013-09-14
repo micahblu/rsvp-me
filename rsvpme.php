@@ -20,7 +20,7 @@ $siteurl = get_option('siteurl');
 define('PLUGIN_PATH', $siteurl . '/wp-content/plugins/rsvp-me');
 
 include (RSVP_ME_FILE_PATH . "/includes/rsvpme_functions.php");
-include (RSVP_ME_FILE_PATH . "/includes/rsvpme_core.php");
+include (RSVP_ME_FILE_PATH . "/includes/rsvpme_widget.php");
 
 register_activation_hook( __FILE__, 'rsvp_me_install' );
 
@@ -92,7 +92,7 @@ if( is_admin() ){
 }
 
 /* web visitor scripts */
-add_action('wp_footer', 'rsvp_me_scripts');	
+add_action('wp_footer', 'rsvp_me_scripts	');	
 
 add_action('init', 'rsvp_init_header');
 

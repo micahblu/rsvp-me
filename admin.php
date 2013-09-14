@@ -22,10 +22,6 @@ function rsvp_me_admin_header(){
 	
 	var $ = jQuery;
 	
-	$(document).ready(function(){
-		
-	});
-	
 	function rsvp_me_delete_event(id){
 		
 		var data = {
@@ -33,7 +29,7 @@ function rsvp_me_admin_header(){
 			id : id
 		};
 	
-		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+		// since Wordpress 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 		$.post(ajaxurl, data, function(response) {
 									   
 			$("#eventrow_"+id).remove(); //remove deleted event row
@@ -44,17 +40,8 @@ function rsvp_me_admin_header(){
 	}
 		
 	function toggle_rsvps(id){
-	
-		if( $("#event_rsvps_"+id).css("display") == "none" ){
-			$("#event_rsvps_"+id).show();
-		}else{
-			$("#event_rsvps_"+id).hide();
-		}
-		
+		$("#event_rsvps_"+id).toggle();
 	}
-	
-	
-		
 	</script>
 	<?	
 }
