@@ -263,7 +263,6 @@ var rsvpMe = {
 			year : this.curyear,
 			action : "update_calendar"
 		};
-		alert(plugin_path);
 		//prepare preloader
 		var preloader = new Image();
 		preloader.src = plugin_path + "/images/ajax-loader-inline.gif";

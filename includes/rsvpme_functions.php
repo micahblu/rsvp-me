@@ -417,15 +417,13 @@ function rsvp_me_event_form($handle, $event=NULL){
 		<p>What's the event?</p>
   
 		<table cellpadding="10" cellpadding="5">
-			
 			<tr>
-				<td>Event title</td><td><input type='text' id='text' name='title' value='<?php echo stripslashes($event['title'])?>' /></td>
+				<td>Event title</td><td><input type='text' id='text' name='title' value='<?php if(isset($event['title'])) echo stripslashes($event['title'])?>' /></td>
 			</tr>
-			
 			<tr>
-				<td>Event description</td><td><textarea name='description' id='description' style='width:275px; height:75px'><?php echo stripslashes($event['description'])?></textarea></td>
+				<td>Event description</td>
+				<td><textarea name='description' id='description' style='width:275px; height:75px'><?php if(isset($event['description'])) echo stripslashes($event['description'])?></textarea></td>
 			</tr>
-			
 		</table>
 		</div>
 		
@@ -435,7 +433,7 @@ function rsvp_me_event_form($handle, $event=NULL){
 			<tr>
 				<td>
 				Date<br />
-				<input type="text" onclick="cal.appendCalendar(this, '400', '300', '<?php echo PLUGIN_PATH ?>')" name="date" readonly="readonly" size='10' maxlength="10" value="<?php echo $date?>" title="calfield" class='reqd' />
+				<input type="text" onclick="cal.appendCalendar(this, '400', '300', '<?php echo PLUGIN_PATH ?>')" name="date" readonly="readonly" size='10' maxlength="10" value="<?php if(isset($date)) echo $date ?>" title="calfield" class='reqd' />
 				</td>
 			
 				<td>
@@ -466,8 +464,8 @@ function rsvp_me_event_form($handle, $event=NULL){
 				&nbsp;<br />
 				<select name='meridian'>
 			   
-				  <option value='am' <?= $meridian == "am" ? "selected='selected'" : "" ?>>AM</option>
-				  <option value='pm' <?= $meridian == "pm" ? "selected='selected'" : "" ?>>PM</option>
+				  <option value='am' <?php echo ( isset($meridian) && $meridian == "am") ? "selected='selected'" : "" ?>>AM</option>
+				  <option value='pm' <?php echo ( isset($meridian) && $meridian == "pm") ? "selected='selected'" : "" ?>>PM</option>
 				
 				 </select>
 				</td>
