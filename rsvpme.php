@@ -19,12 +19,13 @@ $siteurl = get_option('siteurl');
 
 define('PLUGIN_PATH', $siteurl . '/wp-content/plugins/rsvp-me');
 
-include_once (RSVP_ME_FILE_PATH . "/includes/rsvpme_functions.php");
+include (RSVP_ME_FILE_PATH . "/includes/rsvpme_functions.php");
+include (RSVP_ME_FILE_PATH . "/includes/rsvpme_core.php");
 
 register_activation_hook( __FILE__, 'rsvp_me_install' );
 
 //create a sidebar widget for the event calendar
-wp_register_sidebar_widget('rsvp_me_calendar', 'RSVP ME Calendar', 'rsvp_me_calendar_widget', array( 'option' => 'value' ) );
+//wp_register_sidebar_widget('rsvp_me_calendar', 'RSVP ME Calendar', 'rsvp_me_calendar_widget', array( 'option' => 'value' ) );
 
 /* Append needed elements and includes to the header */
 add_action('wp_print_styles', 'add_styles');
@@ -39,10 +40,7 @@ function add_styles() {
 
 function rsvp_init_header(){
 
-	wp_enqueue_script("jquery");
-
 	wp_enqueue_script("thickbox");
-
 	wp_enqueue_style("thickbox");
 	
 	/* rsvm me scripts */
@@ -58,28 +56,21 @@ function rsvp_init_header(){
 }
 
 	
-function add_to_header(){
+function rsvp_me_scripts(){
 	//add neccessarry scripts & styles
 	?>
-    <script type='text/javascript'>
-		
-		var $ = jQuery;
-		
+  <script type='text/javascript'>
+
 		var plugin_path = "<?= PLUGIN_PATH ?>";
-		
 		var ajaxurl = "<?= admin_url('admin-ajax.php'); ?>";
-		
 		var rsvpCookie; //put our cookie var in the main scope
 		
-		$(document).ready(function(){
-			
+		(function(){
 			//init our cookie
 			rsvpCookie = new Cookie("visitordata");
-			
-		});
-		
+		})();
 	</script>
-    <?
+  <?php
 }
 
 
@@ -98,15 +89,12 @@ if( is_admin() ){
 	add_action('wp_ajax_nopriv_update_calendar', 'update_calendar');
 	
 	add_action('wp_ajax_update_calendar', 'update_calendar');
-	
-}else{
-	
-	/* web visitor scripts */
-	add_action('wp_head', 'add_to_header');	
-	
-	add_action('init', 'rsvp_init_header');
-	
 }
+
+/* web visitor scripts */
+add_action('wp_footer', 'rsvp_me_scripts');	
+
+add_action('init', 'rsvp_init_header');
 
 /* Front-side Ajax Methods */
  

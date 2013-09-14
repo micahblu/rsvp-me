@@ -23,8 +23,7 @@ function rsvp_me_admin_header(){
 	var $ = jQuery;
 	
 	$(document).ready(function(){
-			
-	
+		
 	});
 	
 	function rsvp_me_delete_event(id){
@@ -64,10 +63,10 @@ function rsvp_me_admin_scripts(){
 	
 	wp_register_script( 'calendar_script', PLUGIN_PATH . '/js/calendar.js' );
 	
+	wp_enqueue_script('jquery');
+
 	// enqueue the script
 	wp_enqueue_script('calendar_script');
-	
-	wp_enqueue_script('jquery');
 	
 }
 

@@ -101,7 +101,7 @@ function build_rsvp_form($event){
     	 <table cellpadding="5" cellspacing="0" border="0">
         
         	<tr>
-            	<td>First name</td><td><input type='text' name='fname' value='' /></td>
+            	<td>First name</td><td><input type='text'	 name='fname' value='' /></td>
            </tr>
            <tr>
            		<td>Last name</td><td><input type='text' name='lname' value='' /></td>
@@ -164,11 +164,9 @@ function rsvp_me_get_respondents($id){
 	return $rows;
 }
 
-function rsvp_me_calendar_widget($options){
+function rsvp_me_calendar_widget($options = array()){
 	/* output calendar widget */
 	?>
-
-	<h2 class="widgettitle">Event Calendar</h2>
 	<div id='rsvp_me_calendar_widget'>   
 		<? rsvp_me_draw_calendar(NULL) ?>
 	</div><!-- #rsvp_me_calendar_widget -->
