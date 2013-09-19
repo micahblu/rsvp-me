@@ -3,13 +3,13 @@
 Plugin Name: RSVP Me
 Plugin URI: http://www.micahblu.com/
 Description: Event Calendar that allows users to RSVP to the selected event.
-Version: 1.0.1
+Version: 1.1.0
 Author: Micah Blu
 Author URI: http://www.micahblu.com
 License: GPL2
 */
 
-define('RSVP_ME_VERSION', '1.0.1');
+define('RSVP_ME_VERSION', '1.1.0');
 
 define('RSVP_ME_FILE_PATH', dirname(__FILE__));
 
@@ -92,7 +92,7 @@ if( is_admin() ){
 }
 
 /* web visitor scripts */
-add_action('wp_footer', 'rsvp_me_scripts	');	
+add_action('wp_footer', 'rsvp_me_scripts');	
 
 add_action('init', 'rsvp_init_header');
 

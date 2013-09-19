@@ -4,7 +4,7 @@ Donate link: http://micahblu.com/products/rsvp-me
 Tags: rsvp plugin, rsvp widget, event, rsvp events, rsvp calendar
 Requires at least: 2.0.2
 Tested up to: 3.5.1
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 
 == Description ==
 
