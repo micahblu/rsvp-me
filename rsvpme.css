@@ -87,6 +87,11 @@ div.rsvp-form{
 	top: 25px;
 }
 
+.rsvp-me-form-wrapper{
+	background: white;
+	padding: 35px;
+}
+
 #rsvpEventTitle{
 	font-weight: bold;
 }

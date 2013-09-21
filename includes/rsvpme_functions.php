@@ -13,10 +13,9 @@ function rsvp_me_install(){
 	$table_prefix = $wpdb->prefix . "rsvp_me_";
 	
 	$tables = array(
-		"settings" => $table_prefix . "settings",
-		"events" => $table_prefix . "events",
-		"respondents" => $table_prefix . "respondents",
-		
+		"settings" 		 => $table_prefix . "settings",
+		"events"			 => $table_prefix . "events",
+		"respondents"  => $table_prefix . "respondents"
 	);
 	
 	//require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); //required for dbDelta()
@@ -130,6 +129,14 @@ function build_rsvp_form($event){
       	</form>
     </div>
     <?
+}
+
+function get_rsvp_by_id($id){
+	global $wpdb;
+		
+	$event = $wpdb->get_results("SELECT *, DATE(event_date_time) AS ymd FROM " . $wpdb->prefix . "rsvp_me_events 
+								   WHERE id='$id'", ARRAY_A);
+	return $event[0];
 }
 
 function rsvp_me_get_events($month, $year){
@@ -262,7 +269,7 @@ function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 		}
 		
 		
-		/** check for events !! **/
+		/** check for events !! 
 		if(isset($events[$current_ymd]))
 		{
 			if($hasMultipleEvents)
@@ -276,7 +283,7 @@ function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 			{
 				build_rsvp_form($events[$current_ymd][0]);
 			}
-		}
+		}**/
 		//die();
 		
 		/* add in the day number */

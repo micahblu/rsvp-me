@@ -1,7 +1,7 @@
 <?
 /*
-RSVP ME admin functions
-*/
+ * RSVP ME Pro admin functions
+ */
 global $wpdb;
 	
 //add the same stylesheet we use for wp
