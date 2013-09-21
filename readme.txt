@@ -1,4 +1,4 @@
-=== RSVP ME PRO ===
+=== RSVP ME ===
 Contributors: MicahBlu
 Donate link: http://micahblu.com/products/rsvp-me
 Tags: rsvp plugin, rsvp widget, event, rsvp events, rsvp calendar
@@ -35,27 +35,39 @@ here: http://micahblu.com and get in touch.
 
 == Changelog ==
 
+
+09-23-2013
+
+* Event Shortcodes added
+* Event RSVP forms are now templated
+* A cleaner more reliable lightbox is being used
+* Several minor bug fixes
+
 09-14-2013
- 1. Updated the widget core to extend Wordpress's Widget class
- 2. Now allows a user defined title for the event calendar widget
- 3. Fixed a jquery dependancy bug caused by themes which place jquery in the footer
+
+* Updated the widget core to extend Wordpress's Widget class
+* Now allows a user defined title for the event calendar widget
+* Fixed a jquery dependancy bug caused by themes which place jquery in the footer
+* Major code refactoring/cleanup
+
+05-23-2012
+
+* added needed padding on the rsvp form needed for some themes
+* added an isset() on an index variable to avoid runtime errors
+
+05-22-2012
+
+* Cleaned up some css styling rules and checked it against the wordpress 3.5.1
 
 12-30-2010 updates by Micah Blu 
 
-  1. Made RSVP ME more widget friendly by encapsulating the widget in <li class="widget"> tags
-  2. Added better default styles for the calendar widget
+ * Made RSVP ME more widget friendly by encapsulating the widget in <li class="widget"> tags
+ * Added better default styles for the calendar widget
 
 12-31-2010
 
-  Stable release 0.9
-
-05-22-2012
- 1. Cleaned up some css styling rules and checked it against the wordpress 3.5.1
-
-05-23-2012
- 1. added needed padding on the rsvp form needed for some themes
- 2. added an isset() on an index variable to avoid runtime errors
+* First stable release 0.9
 
 == Upgrade Notice ==
 
-If you have downloaded RSVP Me before 12-30-2010, I strongly recommend deleting the old one and uploading a new one.. Don't worry RSVP Me will remember all your old data!
+If you have any issues upgrading please reach me via twitter @micahblu or through my site @ micahblu.com

@@ -14,6 +14,7 @@
  * @return null
  */
 function rsvpme_event_form( $atts ){
+	
 	extract( shortcode_atts( array(
 		'id' => null
 	), $atts ) );

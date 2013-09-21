@@ -66,6 +66,10 @@ var rsvpMe = {
 	
 	showMultiEvent : function(sel){
 	},
+
+	cancel : function(){
+		$(self.lb).trigger('close');
+	},
 	
 	submitRsvp : function(id){
 

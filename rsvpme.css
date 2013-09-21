@@ -16,7 +16,7 @@
 	position:absolute;
 	left: 0px;
 	top:0px;
-}		
+}
 
 #rsvp_me_event_calendar a.next{
 	position:absolute;
@@ -32,8 +32,7 @@
 }
 
 div.rsvp_me_calendar h1, h2, h3, h4, h5{
-	
-	
+
 }
 
 div.rsvp_me_calendar table{
@@ -47,13 +46,13 @@ div.rsvp_me_calendar table tr th, div.rsvp_me_calendar table tr td {
 }
 
 div.rsvp_me_calendar table tr th.calendar-day-head{
-	background: #ccc;
+	background: #f2f2f2;
 	text-align:center;
 }
 
 
 div.rsvp_me_calendar table tr th{
-
+	border:0px;
 }
 
 div.rsvp_me_calendar table tr td{
@@ -61,11 +60,8 @@ div.rsvp_me_calendar table tr td{
 }
 
 div.rsvp_me_calendar table tr td.calendar-today{
-	
 	background: #f2f2f2;
 	font-weight:bold;
-	border: 1px solid #ccc;
-	margin:1px;
 }
 
 div.rsvp_me_calendar table tr td.event-day{
@@ -78,6 +74,11 @@ div.rsvp_me_calendar table tr td.multi-event-day{
 	background: #ffffcc;
 	cursor:pointer;
 	font-weight:bold;
+}
+
+/* foundation override */
+table tr.even, table tr.alt, table tr:nth-of-type(even) {
+	background: inherit;
 }
 
 /* rsvp form styles */

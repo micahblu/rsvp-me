@@ -18,7 +18,7 @@ function rsvp_me_install(){
 		"respondents"  => $table_prefix . "respondents"
 	);
 	
-	//require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); //required for dbDelta()
+	 require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); //required for dbDelta()
 	
 	//settings table
 	if($wpdb->get_var("show tables like '" . $tables["settings"] ."'") != $tables["settings"] ) {
@@ -56,7 +56,7 @@ function rsvp_me_install(){
 	}
 
 	//respondents table
-	if($wpdb->get_var("show tables like '" . $tables["respondents"] . "'") != $tables["settings"] ) {
+	if($wpdb->get_var("show tables like '" . $tables["respondents"] . "'") != $tables["respondents"] ) {
 	
 		$sql = "CREATE TABLE " . $tables["respondents"] . " (
 		id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -74,61 +74,6 @@ function rsvp_me_install(){
 		
 	}
 
-}
-
-function build_rsvp_form($event){
-
-	?>
-    <div id="rsvp_form_<?= $event['id'] ?>" class="rsvp-form" style='display:none'>
-    	<h2 id="rsvpEventTitle"><?= stripslashes($event['title']) ?></h2>
-        <p><?= stripslashes($event['description']) ?></p>
-        
-      	<br />
-        <h3>Venue: <?= stripslashes($event['venue']) ?></h3>
-    
-        <?= $event['address'] . "<br />" . $event['city'] . ", " . $event['state'] . " " . $event['zip'] ?> 
-        
-        
-        <br />
-        
-        <h3>Are you coming? Then RSVP below!</h3>
-        <br />
-        <form id="rsvp_form_<?= $event['id'] ?>" action="" method="" onsubmit="return rsvpMe.submitRsvp(<?= $event['id'] ?>)">
-        
-        <input type='hidden' name='event_id' value='<?= $event['id'] ?>' />
-        
-    	 <table cellpadding="5" cellspacing="0" border="0">
-        
-        	<tr>
-            	<td>First name</td><td><input type='text'	 name='fname' value='' /></td>
-           </tr>
-           <tr>
-           		<td>Last name</td><td><input type='text' name='lname' value='' /></td>
-           </tr>
-           <tr>
-           		<td>Email</td><td><input type='text' name='email' value='' /></td>
-           </tr>
-           <tr>
-           		<td colspan="2">
-               
-                  <input type='radio' name='response' value='accepted' /> I'm Definitely coming! <br />
-                  <input type='radio' name='response' value='maybe' /> I might come. <br />
-                  <input type='radio' name='response' value='declined' /> Sorry can't make it. <br />
-                </td>
-           </tr>
-           <tr>
-           		<td colspan="2">
-                Want to send an additional message?<br />
-                <textarea name='msg' style="width:300px; height:75px"></textarea>
-                </td>
-           </tr>
-           <tr>
-           	<td colspan="2"><span id='submit_cancel_<?= $event['id'] ?>'><input type='submit' name='submit' value='RSVP Me' /> or <a href="Javascript: rsvpMe.cancel()">Cancel</a></span></td>
-           </tr>
-        </table>
-      	</form>
-    </div>
-    <?
 }
 
 function get_rsvp_by_id($id){
@@ -328,9 +273,6 @@ function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 	echo $calendar;
 }
 
-
-
-
 function select_state($default=NULL, $field_name='state'){
 	
 	$state_list = array(
@@ -390,14 +332,11 @@ function select_state($default=NULL, $field_name='state'){
 	$select .= "<option value=''>Select A State</option>\n";
 	
 	foreach($state_list as $value => $name){
-	
 		if(strtolower($default) == strtolower($value) || strtolower($default) == strtolower($name))
 			$select .= "<option value='" . $value . "' selected='selected'>" . $name . "</option>\n";
 		else
 			$select .= "<option value='" . $value . "'>" . $name . "</option>\n";
-	
 	}
-	
 	$select .= "</option>\n";
 	
 	return $select;
@@ -414,12 +353,9 @@ function rsvp_me_event_form($handle, $event=NULL){
 	}	
 	?>
 	<div id='admin-wrapper'>
-        <h1><?=ucfirst($handle)?> Event</h1>
-	   
+  	<h1><?=ucfirst($handle)?> Event</h1>
 		<form action="" method="post" name="">
-		
-        <?php echo $handle=='edit' ? "<input type='hidden' name='id' value='" . $event["id"] ."' />\n" : "" ?>
-        
+    <?php echo $handle=='edit' ? "<input type='hidden' name='id' value='" . $event["id"] ."' />\n" : "" ?>
 		<div class='form-segments'>
 		<p>What's the event?</p>
   
@@ -442,38 +378,29 @@ function rsvp_me_event_form($handle, $event=NULL){
 				Date<br />
 				<input type="text" onclick="cal.appendCalendar(this, '400', '300', '<?php echo PLUGIN_PATH ?>')" name="date" readonly="readonly" size='10' maxlength="10" value="<?php if(isset($date)) echo $date ?>" title="calfield" class='reqd' />
 				</td>
-			
 				<td>
 				Hour<br />
 				<select name='hour'>
-					<?
-					for($i=1; $i < 13; $i++){
+					<?php for($i=1; $i < 13; $i++){
 						$h = ($i < 10 ? "0" . $i : $i);
 						echo "<option value='$h' " . ($hour == $h ? "selected='selected'" : "") . ">$h</option>\n";
-					} 
-					?>
+					} ?>
 				</select>
-				
 				</td>
 				<td>
 				Minute<br />
 				<select name='minute'>
-					<?
-					for($i=0; $i < 61; $i++){
+					<?php for($i=0; $i < 61; $i++){
 						$min = ($i < 10 ? "0" . $i : $i);
 						echo "<option value='$min' " . ($minute == $min ? "selected='selected'" : "") . ">$min</option>\n";
-					} 
-					?>
+					} ?>
 				</select>
-			  
 				</td>
 				<td>
 				&nbsp;<br />
 				<select name='meridian'>
-			   
 				  <option value='am' <?php echo ( isset($meridian) && $meridian == "am") ? "selected='selected'" : "" ?>>AM</option>
 				  <option value='pm' <?php echo ( isset($meridian) && $meridian == "pm") ? "selected='selected'" : "" ?>>PM</option>
-				
 				 </select>
 				</td>
 			</tr>
@@ -483,38 +410,26 @@ function rsvp_me_event_form($handle, $event=NULL){
 		
 		<div class='form-segments'>
 		<p>Where's it at?</p>
-        
 		<table cellpadding="10" cellpadding="5">
-			
 			<tr>
 				<td>Venue</td><td><input type='text' id='venue' name='venue' value='<?=stripslashes($event['venue'])?>' /></td>
 			</tr>
-			
 			<tr>
 				<td>Address</td><td><textarea name='address' id='address'><?=$event['address']?></textarea></td>
 			</tr>
-			
 			<tr>
 				<td>City</td><td><input type='text' name='city' id='city' value='<?=$event['city']?>' /></td>
 			</tr>
-			
 			<tr>
 				<td>State</td><td><?= select_state($event['state']) ?></td>
 			</tr>
-			
 			<tr>
 				<td>Zip</td><td><input type='text' name='zip' size='5' maxlength="5" value='<?=$event['zip']?>' /></td>
 			</tr>    
-			
-			
 		</table>
 		</div>
-		
-	  
-		<p><input type='submit' name='submit' value='Submit' /></p>
-	   
+		<p><input type='submit' name='submit' value='Submit' /></p>   
 		</form>
-		
 	</div>
 	<? 
 }

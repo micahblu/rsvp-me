@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: RSVP Me Pro!
+Plugin Name: RSVP Me!
 Plugin URI: http://www.micahblu.com/products/rsvp-me-pro
 Description: A Robust RSVP plugin 
 Version: 1.5.0
@@ -17,7 +17,8 @@ define('RSVP_ME_DIR_NAME', basename(RSVP_ME_FILE_PATH));
 
 $siteurl = get_option('siteurl'); 
 
-define('PLUGIN_PATH', $siteurl . '/wp-content/plugins/rsvp-me-pro');
+define('PLUGIN_PATH', $siteurl . '/wp-content/plugins/rsvp-me');
+
 
 include (RSVP_ME_FILE_PATH . "/includes/rsvpme_functions.php");
 include (RSVP_ME_FILE_PATH . "/includes/rsvpme_widget.php");
@@ -42,7 +43,6 @@ function add_styles() {
 }
 
 add_action('wp_print_styles', 'add_styles');
-
 
 function rsvp_me_scripts(){
 

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * RSVP ME Pro admin functions
  */
@@ -19,11 +19,8 @@ add_action('wp_ajax_rsvp_me_delete_event', 'rsvp_me_delete_event');
 function rsvp_me_admin_header(){
 	?>
 	<script type="text/javascript">
-	
 	var $ = jQuery;
-	
 	function rsvp_me_delete_event(id){
-		
 		var data = {
 			action : 'rsvp_me_delete_event',
 			id : id
@@ -44,30 +41,21 @@ function rsvp_me_admin_header(){
 }
 
 function rsvp_me_admin_scripts(){
-	
 	wp_register_script( 'calendar_script', PLUGIN_PATH . '/js/calendar.js' );
-	
 	wp_enqueue_script('jquery');
 
 	// enqueue the script
 	wp_enqueue_script('calendar_script');
-	
 }
 
 function rsvp_me_plugin_menu() {
   
 	$top_menu_slug = "rsvp_events_overview";
-	
 	//add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
-	
 	add_menu_page('RSVP ME Events', 'RSVP ME', 'manage_options', $top_menu_slug, 'rsvp_me_events_overview');
-	
 	add_submenu_page( $top_menu_slug, 'Add Event', 'Add Event', 'manage_options', 'rsvp_me_add_event', 'rsvp_me_add_event');
-	
 	add_submenu_page( '', 'Edit Event', 'Add Event', 'manage_options', 'rsvp_me_edit_event', 'rsvp_me_edit_event');
-	
 	add_submenu_page( '', 'Delete Event', 'Delete Event', 'manage_options', 'rsvp_me_delete_event', 'rsvp_me_delete_event');
-
 }
 
 function rsvp_me_events_overview(){
