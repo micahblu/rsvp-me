@@ -3,13 +3,13 @@
 Plugin Name: RSVP Me Pro!
 Plugin URI: http://www.micahblu.com/products/rsvp-me-pro
 Description: A Robust RSVP plugin 
-Version: 1.1.0
+Version: 1.5.0
 Author: Micah Blu
 Author URI: http://www.micahblu.com
 License: GPL2
 */
 
-define('RSVP_ME_VERSION', '1.1.0');
+define('RSVP_ME_VERSION', '1.5.0');
 
 define('RSVP_ME_FILE_PATH', dirname(__FILE__));
 
@@ -52,10 +52,6 @@ function rsvp_me_scripts(){
 	wp_register_script("rsvpMe", PLUGIN_PATH . "/js/rsvp_me.js", null, null, true);
 	wp_enqueue_script("rsvpMe");
 	
-	/*
-	wp_register_script("rsvpMeAjax", PLUGIN_PATH . "/js/ajax.js");
-	wp_enqueue_script("rsvpMeAjax");
-	*/
 	wp_register_script("rsvpMeCookie", PLUGIN_PATH . "/js/Cookie.js", null, null, true);
 	wp_enqueue_script("rsvpMeCookie");
 }
@@ -74,6 +70,9 @@ function rsvp_me_footer(){ ?>
 		})();
 		
 	</script>
+	<div id="event_form_wrapper" style="display:none">
+		<?php include RSVP_ME_FILE_PATH . "/themes/default/event.html"; ?>
+	</div>
   <?php
 }
 add_action("wp_footer", "rsvp_me_footer", 99);

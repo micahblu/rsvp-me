@@ -1,9 +1,9 @@
 <?php
 /**
  * RSVP ME functions 
- * Author: Micah Blu
- * 
- * Meat & Potatos, most of the functions that make this work :)
+ *
+ * @author: Micah Blu
+ * @since: 0.5
  */
 
 function rsvp_me_install(){
