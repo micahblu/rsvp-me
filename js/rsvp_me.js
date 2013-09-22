@@ -139,9 +139,10 @@ var rsvpMe; // put our namespace in global scope
 					$(".rsvp-me-form-wrapper").css("top", ($(window).height() / 2 ) - ($(".rsvp-me-form-wrapper").height() / 2 ) + "px"); 
 			
 					setTimeout("jQuery('#event_form_wrapper').trigger('close')", 3000);
+					//setTimeout("$('.rsvp-me-form-wrapper').trigger('close')", 3000);
 				}else{
 					$(document).scrollTop(0);
-					setTimeout("jQuery('.alert-box').fadeOut();", 3000);
+					//setTimeout("jQuery('.alert-box').fadeOut();", 3000);
 				}
 				return false;
 
@@ -206,67 +207,7 @@ var rsvpMe; // put our namespace in global scope
 					calwrap.parentNode.removeChild(calwrap);
 					parent.innerHTML = data;
 				}
-<<<<<<< HEAD
 			});
-=======
-				
-			}
-
-		};
-				
-		ajaxGet(ajaxurl, data, obj);	
-	}
-
-}
-
-var mybox = {
-	
-	overlayDiv : {},
-	
-	contentDiv : {},
-	
-	clickedArea : "",
-	
-	overlay : function(html, width, height){
-		
-		this.overlayDiv = document.createElement("div");
-		
-		this.overlayDiv.style.position = "absolute";
-		this.overlayDiv.style.top = "0px";
-		this.overlayDiv.style.left = "0px";
-		this.overlayDiv.style.width = $(document).width() + "px";
-		this.overlayDiv.style.height = $(document).height() + "px";
-		this.overlayDiv.style.zIndex = "99999";
-		this.overlayDiv.style.background = "url(" + plugin_path + "/images/overlay_bg.png) repeat top left";
-		
-		this.overlayDiv.onclick = function(){
-			if(mybox.clickedArea == "content"){
-				mybox.clickedArea = ""; //reset clicked area
-			}else{
-				mybox.closebox();
-			}
-		}
-		
-		document.body.insertBefore(this.overlayDiv, document.body.firstChild);	
-		
-		//now prepare the centered content div
-		this.contentDiv = document.createElement("div");
-		this.contentDiv.className = "overlay-content";
-		this.contentDiv.style.width = width + "px";
-		//this.contentDiv.style.height = height + "px";
-		this.contentDiv.style.background = "white";
-		this.contentDiv.style.padding = "35px";
-		this.contentDiv.style.position = "relative";
-		this.contentDiv.style.margin = "0px auto";
-		this.overlayDiv.style.zIndex = "99999999";
-		this.contentDiv.style.marginTop = ( (getWindowHeight() - height) / 2 ) + "px";
-		
-		this.contentDiv.innerHTML = html;
-		
-		this.contentDiv.onclick = function(){
-			mybox.clickedArea = "content";
-			//mybox.closebox();
->>>>>>> 5b90c1248aa50dbb3b65b01c06bc3e218b142c28
 		}
 	}
 
