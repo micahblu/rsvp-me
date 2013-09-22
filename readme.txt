@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 === RSVP ME ===
+=======
+=== Plugin Name ===
+>>>>>>> 5b90c1248aa50dbb3b65b01c06bc3e218b142c28
 Contributors: MicahBlu
 Donate link: http://micahblu.com/products/rsvp-me
 Tags: rsvp plugin, rsvp widget, event, rsvp events, rsvp calendar
@@ -8,7 +12,11 @@ Stable tag: 1.5.0
 
 == Description ==
 
+<<<<<<< HEAD
 RSVP ME Pro is a simple and powerful Wordpress plugin that allows you to create events that your site visitors can RSVP to via a calendar widget. 
+=======
+RSVP ME  is an easy to use Wordpress plugin that allows you to create events that your site visitors can RSVP to via a calendar widget. 
+>>>>>>> 5b90c1248aa50dbb3b65b01c06bc3e218b142c28
 
 == Installation ==
 
@@ -35,6 +43,15 @@ here: http://micahblu.com and get in touch.
 
 == Changelog ==
 
+<<<<<<< HEAD
+=======
+09-14-2013
+ 1. Updated the widget core to extend Wordpress's Widget class
+ 2. Now allows a user defined title for the event calendar widget
+ 3. Fixed a jquery dependancy bug caused by themes which place jquery in the footer
+
+12-30-2010 updates by Micah Blu 
+>>>>>>> 5b90c1248aa50dbb3b65b01c06bc3e218b142c28
 
 09-23-2013
 
