@@ -49,13 +49,23 @@ function rsvp_me_admin_scripts(){
 }
 
 function rsvp_me_plugin_menu() {
+	//add_menu_page( 'RSVP ME', 'RSVP ME', 'manage_options', 'myplugin/myplugin-admin.php', '', plugins_url( 'myplugin/images/icon.png' ), 99 );
   
 	$top_menu_slug = "rsvp_events_overview";
 	//add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
-	add_menu_page('RSVP ME Events', 'RSVP ME', 'manage_options', $top_menu_slug, 'rsvp_me_events_overview');
+	
+	add_menu_page('RSVP ME', 'RSVP ME', 'manage_options', $top_menu_slug, 'rsvp_me_settings', plugins_url('rsvp-me/images/red-pen.png'));
+	
+	add_submenu_page( $top_menu_slug, 'Manage Events', 'Manage Events', 'manage_options', 'rsvp_me_events_overview', 'rsvp_me_events_overview');
 	add_submenu_page( $top_menu_slug, 'Add Event', 'Add Event', 'manage_options', 'rsvp_me_add_event', 'rsvp_me_add_event');
-	add_submenu_page( '', 'Edit Event', 'Add Event', 'manage_options', 'rsvp_me_edit_event', 'rsvp_me_edit_event');
-	add_submenu_page( '', 'Delete Event', 'Delete Event', 'manage_options', 'rsvp_me_delete_event', 'rsvp_me_delete_event');
+	//add_submenu_page( '', 'Edit Event', 'Add Event', 'manage_options', 'rsvp_me_edit_event', 'rsvp_me_edit_event');
+	//add_submenu_page( '', 'Delete Event', 'Delete Event', 'manage_options', 'rsvp_me_delete_event', 'rsvp_me_delete_event');
+	
+}
+
+
+function rsvp_me_settings(){
+
 }
 
 function rsvp_me_events_overview(){
