@@ -139,10 +139,9 @@ var rsvpMe; // put our namespace in global scope
 					$(".rsvp-me-form-wrapper").css("top", ($(window).height() / 2 ) - ($(".rsvp-me-form-wrapper").height() / 2 ) + "px"); 
 			
 					setTimeout("jQuery('#event_form_wrapper').trigger('close')", 3000);
-					//setTimeout("$('.rsvp-me-form-wrapper').trigger('close')", 3000);
 				}else{
 					$(document).scrollTop(0);
-					//setTimeout("jQuery('.alert-box').fadeOut();", 3000);
+					setTimeout("jQuery('.alert-box').fadeOut();", 3000);
 				}
 				return false;
 
