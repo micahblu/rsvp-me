@@ -1,8 +1,11 @@
 <div id="rsvp_msg"></div>
 <header>
 	<h2>{:title}</h2>
+	<p>{:featured_image}</p>
 	<p>{:description}</p>
-	<h3>{:venue}</h3>
+	<h3>{:venue_name}</h3>
+	<p>Date: {:date}</p>
+	<p>Time: {:time}</p>
 	<p>{:address}<br>
 	{:city}, {:state} {:zip}</p>
 </header>
@@ -10,7 +13,7 @@
 <section>
 	<h3>Are you coming? Then RSVP below!</h3>
 	<form id="rsvp_form_{:id}" action="" method="" onsubmit="return rsvpMe.submitRsvp({:id})">
-		<input type="hidden" name="event_id" value="3">
+		<input type="hidden" name="rsvp_event_id" value="{:id}">
 		<p>
 		<label for="fname">First name</label>
 		<input class="reqd" type="text" name="fname" />
@@ -29,7 +32,9 @@
 		<input type="radio" name="response" value="declined"> Sorry can't make it.<br>
 		</p>
 		<p>Want to send an additional message?<br>
-		<textarea name="msg"></textarea></p>
+		
+		<textarea id="rsvp_msg" name="msg"></textarea></p>
+
 		<p><span id="submit_cancel_{:id}">
 		<input type="submit" name="submit" value="RSVP Me"> or 
 		<a href="Javascript: rsvpMe.cancel()";>Cancel</a></span></p>

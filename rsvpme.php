@@ -23,6 +23,7 @@ define('PLUGIN_PATH', $siteurl . '/wp-content/plugins/rsvp-me');
 include (RSVP_ME_FILE_PATH . "/includes/rsvpme_functions.php");
 include (RSVP_ME_FILE_PATH . "/includes/rsvpme_widget.php");
 include (RSVP_ME_FILE_PATH . "/includes/rsvpme_shortcodes.php");
+include (RSVP_ME_FILE_PATH . "/includes/rsvpme_events_post_type.php");
 
 register_activation_hook( __FILE__, 'rsvp_me_install' );
 
@@ -46,12 +47,14 @@ add_action('wp_print_styles', 'add_styles');
 
 function rsvp_me_scripts(){
 
+	wp_enqueue_script("jquery-ui", PLUGIN_PATH . "/js/jquery-ui.js", "jquery", null, true);
+
 	wp_enqueue_script("lightbox", PLUGIN_PATH . "/js/jquery.lightbox_me.js", "jquery", null, true);
 	
 	/* rsvm me scripts */
 	wp_register_script("rsvpMe", PLUGIN_PATH . "/js/rsvp_me.js", null, null, true);
 	wp_enqueue_script("rsvpMe");
-	
+
 	wp_register_script("rsvpMeCookie", PLUGIN_PATH . "/js/Cookie.js", null, null, true);
 	wp_enqueue_script("rsvpMeCookie");
 }
@@ -68,7 +71,7 @@ function rsvp_me_footer(){ ?>
 			//init our cookie
 			rsvpCookie = new Cookie("visitordata");
 		})();
-		
+
 	</script>
 	<div id="event_form_wrapper" style="display:none">
 		<?php include RSVP_ME_FILE_PATH . "/themes/default/event.html"; ?>
@@ -80,12 +83,12 @@ add_action("wp_footer", "rsvp_me_footer", 99);
 /**
  * Ajax functions
  */
-function my_action_callback() {
+function rsvp_me_event_data() {
 	global $wpdb; // this is how you get access to the database
 
 	$id = $_POST['id'];
 	//rsvpme_event_form(array("id" => $id));
-	echo json_encode(get_rsvp_by_id($id));
+	echo json_encode(get_rsvp_event_by_id($id));
 }
 
 /* Front-side Ajax Methods */ 
@@ -112,11 +115,10 @@ function submit_rsvp(){
 		echo json_encode(array("success" => true));
 	}
 }
-// hook our ajax functions
 
 // event form ajax function
-add_action('wp_ajax_rsvp_event_form', 'my_action_callback');
-add_action('wp_ajax_nopriv_rsvp_event_form', 'my_action_callback');
+add_action('wp_ajax_rsvp_me_event_data', 'rsvp_me_event_data');
+add_action('wp_ajax_nopriv_rsvp_me_event_data', 'rsvp_me_event_data');
 
 // submit rsvp ajax function
 add_action('wp_ajax_nopriv_submit_rsvp', 'submit_rsvp');

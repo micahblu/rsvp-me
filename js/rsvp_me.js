@@ -5,20 +5,22 @@
  */
 var rsvpMe; // put our namespace in global scope
 (function($){
+
 	rsvpMe = {
-		
 		lb : {}, //lightbox object
 		self : this,
 		clone : null,
 		
 		showEvent : function(id){      
-
-			$.post(ajaxurl, { action: 'rsvp_event_form', id : id }, function(data){
+			
+			$.post(ajaxurl, { action: 'rsvp_me_event_data', id : id }, function(data){
 				//check for leading '0' that wp adds, if there remove
+
 				if(data.slice(-1) == "0"){
 					data = data.slice(0, -1);
 				}
 				var jsondata = $.parseJSON(data);
+
 				rsvpMe.buildRSVPMeForm(jsondata);
 				return;
 			});
@@ -32,10 +34,10 @@ var rsvpMe; // put our namespace in global scope
 		 * @since  1.5.0
 		 */
 		buildRSVPMeForm : function(event){
-			
+
 			//first make sure we're not already on that event's page
 			if(document.getElementById("rsvp_form_" + event.id)){
-				return false;
+				//return false;
 			}
 			if(!this.clone){
 				this.clone = $("#event_form_wrapper").clone();
@@ -73,14 +75,17 @@ var rsvpMe; // put our namespace in global scope
 		},
 		
 		submitRsvp : function(id){
-
+			
 			var valid=true;
 			var selected = 0;
 			var fields = {};
 	
 			//var form = document.getElementById("rsvp_form_"+id);
 			$("#rsvp_form_"+id + " input").each(function(index){
-				fields[this.name] = this.value;
+				
+				if(this.name == "rsvp_event_id"){
+					fields[this.name] = this.value;
+				}
 				if(this.className == "reqd"){
 					if(this.value==""){
 						//alert(this.name + " = " + this.value);
@@ -89,10 +94,12 @@ var rsvpMe; // put our namespace in global scope
 					}else{
 						//let's make sure the bg is back to default
 						$(this).css("background", "#ffffff");
+						fields[this.name] = this.value;
 					}	
 				}
 				if(this.type == "radio"){
 					if(this.checked){
+						fields[this.name] = this.value;
 						selected++;
 					}
 				}
@@ -110,8 +117,8 @@ var rsvpMe; // put our namespace in global scope
 				lname : escape(fields["lname"]),
 				email : escape(fields["email"]),
 				response : fields["response"],
-				msg : escape(fields["msg"]),
-				event_id : fields["event_id"]
+				msg : escape(document.getElementById("rsvp_form_"+id)["msg"].value),
+				event_id : escape(fields["rsvp_event_id"])
 			};
 
 			if ( $('.rsvp-me-form-wrapper').length > 0) { 
@@ -121,6 +128,7 @@ var rsvpMe; // put our namespace in global scope
 			}
 					
 			$.post(ajaxurl, data, function(data){
+	
 				if(data.slice(-1) == "0"){
 					data = data.slice(0, -1);
 				}
@@ -142,7 +150,7 @@ var rsvpMe; // put our namespace in global scope
 					//setTimeout("$('.rsvp-me-form-wrapper').trigger('close')", 3000);
 				}else{
 					$(document).scrollTop(0);
-					//setTimeout("jQuery('.alert-box').fadeOut();", 3000);
+					setTimeout("jQuery('.alert-box').fadeOut();", 3000);
 				}
 				return false;
 

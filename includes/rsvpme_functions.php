@@ -24,10 +24,10 @@ function rsvp_me_install(){
 	if($wpdb->get_var("show tables like '" . $tables["settings"] ."'") != $tables["settings"] ) {
 	
 		$sql = "CREATE TABLE " . $tables["settings"] . " (
-		id mediumint(9) NOT NULL AUTO_INCREMENT,
-		version varchar(255) NOT NULL,
-		license varchar(255) NOT NULL,
-		UNIQUE KEY id (id)
+			id mediumint(9) NOT NULL AUTO_INCREMENT,
+			version varchar(255) NOT NULL,
+			license varchar(255) NOT NULL,
+			UNIQUE KEY id (id)
 		);";
 		
 		$wpdb->query($sql);
@@ -39,16 +39,16 @@ function rsvp_me_install(){
 	if($wpdb->get_var("show tables like '" . $tables["events"] . "'") != $tables["events"] ) {
 	
 		$sql = "CREATE TABLE " . $tables["events"] . " (
-		id mediumint(9) NOT NULL AUTO_INCREMENT,
-		title varchar(255) NOT NULL,
-		description text NOT NULL,
-		venue varchar(255) NOT NULL,
-		address varchar(255) NOT NULL,
-		city varchar(255) NOT NULL,
-		state varchar(3) NOT NULL,
-		zip char(5) NOT NULL,
-		event_date_time datetime NOT NULL,
-		UNIQUE KEY id (id)
+			id mediumint(9) NOT NULL AUTO_INCREMENT,
+			title varchar(255) NOT NULL,
+			description text NOT NULL,
+			venue varchar(255) NOT NULL,
+			address varchar(255) NOT NULL,
+			city varchar(255) NOT NULL,
+			state varchar(3) NOT NULL,
+			zip char(5) NOT NULL,
+			event_date_time datetime NOT NULL,
+			UNIQUE KEY id (id)
 		);";
 		
 		$wpdb->query($sql);
@@ -59,15 +59,15 @@ function rsvp_me_install(){
 	if($wpdb->get_var("show tables like '" . $tables["respondents"] . "'") != $tables["respondents"] ) {
 	
 		$sql = "CREATE TABLE " . $tables["respondents"] . " (
-		id mediumint(9) NOT NULL AUTO_INCREMENT,
-		event_id mediumint(9) NOT NULL,
-		fname varchar(255) NOT NULL,
-		lname varchar(255) NOT NULL,
-		email varchar(255) NOT NULL,
-		response enum('accepted', 'declined', 'maybe') NOT NULL,
-		msg mediumtext NULL,
-		time_accepted datetime NOT NULL,
-		UNIQUE KEY id (id)
+			id mediumint(9) NOT NULL AUTO_INCREMENT,
+			event_id mediumint(9) NOT NULL,
+			fname varchar(255) NOT NULL,
+			lname varchar(255) NOT NULL,
+			email varchar(255) NOT NULL,
+			response enum('accepted', 'declined', 'maybe') NOT NULL,
+			msg mediumtext NULL,
+			time_accepted datetime NOT NULL,
+			UNIQUE KEY id (id)
 		);";
 				
 		$wpdb->query($sql);
@@ -76,39 +76,94 @@ function rsvp_me_install(){
 
 }
 
-function get_rsvp_by_id($id){
+function get_rsvp_event_by_id($id){
 	global $wpdb;
-		
-	$event = $wpdb->get_results("SELECT *, DATE(event_date_time) AS ymd FROM " . $wpdb->prefix . "rsvp_me_events 
-								   WHERE id='$id'", ARRAY_A);
-	return $event[0];
+	//prepare an event array and return, start with basic event post info
+	$eventpost = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "posts WHERE ID=$id", ARRAY_A);
+	
+
+	if(count($eventpost) < 1) return array("error" => "Empty result");
+
+	$event = array();
+
+	$event['id'] = $eventpost[0]['ID'];
+	$event['title'] = $eventpost[0]['post_title'];
+	$event['description'] = $eventpost[0]['post_content'];
+
+	// now add our post meta data
+	$meta = $wpdb->get_results("SELECT * FROM ". $wpdb->prefix . "postmeta WHERE post_id=" . $id, ARRAY_A);
+
+	// /die(print_r($meta));
+	$ns = "/_rsvp_me_event_/";
+	$str = '';
+	
+	foreach($meta as $field => $value){
+		//let's only match the meta key values with said namespace
+		if(preg_match($ns, $value['meta_key'])){
+			$event[preg_replace($ns, "" , $value['meta_key'])] = $value['meta_value'];
+		}
+	}
+	//let's format our time
+	if( isset($event["hour"]) && isset($event["minute"]) && isset($event["meridian"]) ){
+		$event["time"] = $event["hour"] . ":" . $event["minute"] . $event["meridian"];
+	}
+	$event["featured_image"] = get_the_post_thumbnail($id);
+	return $event;
+}
+
+function _rsvp_me_get_events($month, $year){
+	$events_query = new WP_Query( array('post_type' => array('event', 'post'), 'meta_query' => array( array( '_rsvp_me_event_date' => 'teaser', 'value' => 'on' ) )) );
+while ( $events_query->have_posts() ) :
+    $events_query->the_post();
+    echo get_the_title() . '<br/>';
+endwhile;
 }
 
 function rsvp_me_get_events($month, $year){
 	global $wpdb;
 	
-	$events = array(); //events array that will be returned with ymd date as key
-	
-	$rows = $wpdb->get_results("SELECT *, DATE(event_date_time) AS ymd FROM " . $wpdb->prefix . "rsvp_me_events 
-								   WHERE MONTH(event_date_time) = '$month'
-								   AND YEAR(event_date_time) = '$year'; ", ARRAY_A);
-	foreach($rows as $row)
-	{
-	
-		if(!isset($events[$row['ymd']]))
-		{
+	$events = array();
+
+	//first grab our events
+	$eventrows = $wpdb->get_results("SELECT ID, post_title FROM " . $wpdb->prefix . "posts 
+															WHERE post_type='event'
+															AND post_status='publish'");
+
+	// now our event meta.. specifically the date
+	foreach($eventrows as $event){
+
+		$meta = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "postmeta 
+																WHERE post_id=" . $event->ID . " 
+																AND meta_key='_rsvp_me_event_date'");
+		
+		$date = isset($meta[0]->meta_value) ? $meta[0]->meta_value : null;
+		
+		if($date){
+			//now to compare to incoming month / year
+			$date = explode("/", $date); // MM/DD/YYYY
+
+			if($month == ltrim($date[0]) && $year == $date[2]){
+				// event matches.. we'll store by its y-m
+				$events[$date[2] . "-" . $date[0] . "-" . $date[1]][] = $event->ID; // this event machtes!
+			} 
+		}
+	}
+	return $events;
+
+	/*
+	foreach($rows as $row){
+		if(!isset($events[$row['ymd']])){
 			$events[$row['ymd']] = array();
 		}
 		// we use an array here to account for possibility of multiple events for this day
 		// added 4-23-12 per recommendation by Vegard Kamben of Norway!
 		array_push($events[$row['ymd']], $row);
 	}
-	
 	return $events;
+	*/
 }
 
 function rsvp_me_get_respondents($id){
-	
 	global $wpdb;
 			
 	$rows = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "rsvp_me_respondents
@@ -126,17 +181,15 @@ function rsvp_me_calendar_widget($options = array()){
 }
 
 function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
-	
-	/* 	
-	Changelog:
+	/** 	
+		Changelog:
 		-added div wrapper
 		-added months array and header
 		-added settings array that can be passed to allow manipulation of basic calendar settings like classname & day headers
 		-added defaults for month/date/settings
 	
-	Notes:
-	/$obj needed as wordpress passes the first parameter
-	
+		Notes:
+		$obj needed as wordpress passes the first parameter
 	*/
 	
 	$year = $year ? $year : date("Y"); //default to current year
@@ -203,13 +256,13 @@ function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 			$jsObjects = array(); 
 			foreach($events[$current_ymd] as $event)
 			{
-				$jsObjects[] = "{ id : " . $event["id"] . ", title : '" . $event["title"] . "' }";
+				$jsObjects[] = "{ id : " . $event["id"] ." }";
 			}
 			$td_action = 'onclick="rsvpMe.showMultipleEvents([' . implode(",", $jsObjects) . '])"';	
 			$calendar .= '<td class="' . ($is_today ? 'calendar-today' : 'calendar-day') . ' ' . "multi-event-day" . '" ' . $td_action .'>';
 		}else
 		{
-			$td_action = isset($events[$current_ymd]) ? 'onclick="rsvpMe.showEvent(' . $events[$current_ymd][0]['id'] . ')"' : '';
+			$td_action = isset($events[$current_ymd]) ? 'onclick="rsvpMe.showEvent(' . $events[$current_ymd][0] . ')"' : '';
 			$calendar.= '<td class="' . ($is_today ? 'calendar-today' : 'calendar-day') . ' ' . (isset($events[$current_ymd]) ? "event-day" : "") . '" ' . $td_action .'>';
 		}
 		
@@ -337,7 +390,7 @@ function select_state($default=NULL, $field_name='state'){
 		else
 			$select .= "<option value='" . $value . "'>" . $name . "</option>\n";
 	}
-	$select .= "</option>\n";
+	$select .= "</select>\n";
 	
 	return $select;
 }
@@ -432,5 +485,22 @@ function rsvp_me_event_form($handle, $event=NULL){
 		</form>
 	</div>
 	<? 
+}
+
+function buildTemplateFromValues($templ, $values, $echo=true){
+	if(!file_exists($templ) || empty($values)){
+		return false;
+	}
+
+	ob_start();
+	include $templ;
+	$form = ob_get_contents();
+	ob_end_clean();
+
+	foreach($values as $field => $value){
+		$form = str_replace("{:" . $field . "}", $value, $form);
+	}
+	if($echo) echo stripslashes($form);
+	else return $form;
 }
 ?>

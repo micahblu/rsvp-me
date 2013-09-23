@@ -11,62 +11,37 @@ add_action('admin_menu', 'rsvp_me_plugin_menu');
 
 add_action('admin_init', 'rsvp_me_admin_scripts');
 
-add_action('admin_head', 'rsvp_me_admin_header');
-
 //hook ajax method(s)
-add_action('wp_ajax_rsvp_me_delete_event', 'rsvp_me_delete_event');
+add_action('wp_ajax_rsvp_me_update_settings', 'rsvp_me_update_settings');
 
-function rsvp_me_admin_header(){
-	?>
-	<script type="text/javascript">
-	var $ = jQuery;
-	function rsvp_me_delete_event(id){
-		var data = {
-			action : 'rsvp_me_delete_event',
-			id : id
-		};
-	
-		// since Wordpress 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-		$.post(ajaxurl, data, function(response) { 
-			$("#eventrow_"+id).remove(); //remove deleted event row
-			$("#rsvp_ajax_msg").html("Event successfully removed");
-		});	
-	}
-		
-	function toggle_rsvps(id){
-		$("#event_rsvps_"+id).toggle();
-	}
-	</script>
-	<?	
-}
 
 function rsvp_me_admin_scripts(){
-	wp_register_script( 'calendar_script', PLUGIN_PATH . '/js/calendar.js' );
 	wp_enqueue_script('jquery');
 
-	// enqueue the script
-	wp_enqueue_script('calendar_script');
+	wp_enqueue_script("rsvp-admin", RSVP_ME_FILE_PATH . "/js/admin.js", "jquery", null, true);
 }
 
-function rsvp_me_plugin_menu() {
-	//add_menu_page( 'RSVP ME', 'RSVP ME', 'manage_options', 'myplugin/myplugin-admin.php', '', plugins_url( 'myplugin/images/icon.png' ), 99 );
-  
+function rsvp_me_plugin_menu() {  
 	$top_menu_slug = "rsvp_events_overview";
-	//add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
-	
 	add_menu_page('RSVP ME', 'RSVP ME', 'manage_options', $top_menu_slug, 'rsvp_me_settings', plugins_url('rsvp-me/images/red-pen.png'));
-	
-	add_submenu_page( $top_menu_slug, 'Manage Events', 'Manage Events', 'manage_options', 'rsvp_me_events_overview', 'rsvp_me_events_overview');
-	add_submenu_page( $top_menu_slug, 'Add Event', 'Add Event', 'manage_options', 'rsvp_me_add_event', 'rsvp_me_add_event');
-	//add_submenu_page( '', 'Edit Event', 'Add Event', 'manage_options', 'rsvp_me_edit_event', 'rsvp_me_edit_event');
-	//add_submenu_page( '', 'Delete Event', 'Delete Event', 'manage_options', 'rsvp_me_delete_event', 'rsvp_me_delete_event');
-	
 }
 
-
-function rsvp_me_settings(){
+function rsvp_me_update_settings(){
 
 }
+
+function rsvp_me_settings(){ ?>
+  <h2>RSVP ME Settings</h2>
+
+  <p>
+  	<input type="checkbox" name="rsvp_me_email_notify" /> <label for="rsvp_me_email_notify">Email Notifications?</label>
+  </p>
+
+	<p>
+  	<input type="checkbox" name="rsvpe_me_disable_css" /> <label for="rsvpe_me_disable_css">Disable default CSS?</label>
+  </p>
+
+<?php }
 
 function rsvp_me_events_overview(){
 	?>
