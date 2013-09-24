@@ -47,6 +47,8 @@ add_action('wp_print_styles', 'add_styles');
 
 function rsvp_me_scripts(){
 
+	wp_enqueue_script("jquery");
+	
 	wp_enqueue_script("jquery-ui", RSVP_ME_PLUGIN_URI . "/js/jquery-ui.js", "jquery", null, true);
 
 	wp_enqueue_script("lightbox", RSVP_ME_PLUGIN_URI . "/js/jquery.lightbox_me.js", "jquery", null, true);

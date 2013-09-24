@@ -60,6 +60,14 @@ function rsvp_me_update_settings(){
 
 }
 
+/**
+ * RSVP ME settings..
+ * outputs html form for rsvp me settings 
+ *
+ * @since 1.9
+ * @param null
+ * @return null
+ */
 function rsvp_me_settings(){ ?>
   <h2>RSVP ME Settings</h2>
   <p><strong>Events Page URL:</strong> <?php echo bloginfo("siteurl") ?>/events ( <em>Permalinks must be set</em> )</p>
@@ -71,6 +79,7 @@ function rsvp_me_settings(){ ?>
   </p>
 <?php }
 
+/** -- D E P R E C A T E D -- */
 function rsvp_me_events_overview(){
 	?>
 	<div id='admin-wrapper'>
@@ -193,7 +202,7 @@ function rsvp_me_edit_event(){
 			  'city' => $city, 'state' => $state,
 			  'zip' => $zip, 'event_date_time' => $date_time ), 
 	   	array( 'id' => $id )
-	  );
+		  );
 		echo "<h2>Event edited successfully</h2>\n";
 	}
 	
@@ -214,4 +223,5 @@ function rsvp_me_delete_event(){
 	
 	echo "<h2>Event successfully removed</h2>";
 }
+
 ?>

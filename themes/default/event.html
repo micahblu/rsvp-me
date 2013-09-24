@@ -4,10 +4,14 @@
 	<p>{:featured_image}</p>
 	<p>{:description}</p>
 	<h3>{:venue_name}</h3>
-	<p>Date: {:date}</p>
-	<p>Time: {:time}</p>
 	<p>{:address}<br>
 	{:city}, {:state} {:zip}</p>
+
+	<p>
+		<strong>Date</strong>: {:date}<br />
+	  <strong>Time</strong>: {:time}
+	 </p>
+	
 </header>
 
 <section>
@@ -15,15 +19,15 @@
 	<form id="rsvp_form_{:id}" action="" method="" onsubmit="return rsvpMe.submitRsvp({:id})">
 		<input type="hidden" name="rsvp_event_id" value="{:id}">
 		<p>
-		<label for="fname">First name</label>
+		<label for="fname">First name</label><br />
 		<input class="reqd" type="text" name="fname" />
 		</p>
 		<p>
-		<label for="lname">Last name</label>
+		<label for="lname">Last name</label><br />
 		<input class="reqd" type="text" name="lname" />
 		</p>
 		<p>
-		<label for="email">Email</label>
+		<label for="email">Email</label><br />
 		<input class="reqd" type="text" name="email" />
 		</p>
 		<p>

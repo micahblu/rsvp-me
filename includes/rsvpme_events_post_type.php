@@ -187,7 +187,7 @@ if( ! function_exists( 'event_create_post_type' ) ) :
 	function event_post_save_meta( $post_id, $post ) { // save the data
 		// verify this came from the our screen and with proper authorization,
 		// because save_post can be triggered at other times
-		
+	
 		if(count($_POST) > 0){ // make sure we have $_POST variant_set(variant, value)
 
 			//die(nl2br(print_r($_POST,true)));
