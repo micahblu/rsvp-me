@@ -6,9 +6,30 @@ global $wpdb;
 
 // Hooks 
 add_action('admin_menu', 'rsvp_me_menu');
-add_action('admin_init', 'rsvp_me_register_admin_scripts');
+add_action('admin_init', 'rsvp_me_init');
 add_action('admin_footer', 'rsvp_me_admin_footer');
 add_action('wp_ajax_rsvp_me_update_settings', 'rsvp_me_update_settings');
+
+
+function rsvp_me_init(){
+
+	//check to see if we've just activated
+	if(get_option('Activated_Plugin') == 'rsvp-me'){
+		delete_option('Activated_Plugin');
+
+		rsvp_me_welcome();
+
+		add_action("shutdown", "rsvp_me_welcome");
+	}
+	rsvp_me_register_admin_scripts(); // register our scripts
+}
+
+function rsvp_me_welcome(){ 
+
+	//wp_redirect(admin_url("admin.php?page=rsvp_me_settings"));
+	?>
+	
+<?php }
 
 /**
  * Register/enqueue the admin specific scripts & styles
@@ -52,7 +73,7 @@ function rsvp_me_admin_footer(){ ?>
  * @param null
  */
 function rsvp_me_menu() {  
-	$top_menu_slug = "rsvp_events_overview";
+	$top_menu_slug = "rsvp_events_settings";
 	add_menu_page('RSVP ME', 'RSVP ME', 'manage_options', $top_menu_slug, 'rsvp_me_settings', plugins_url('rsvp-me/images/red-pen.png'));
 }
 

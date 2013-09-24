@@ -11,52 +11,11 @@ function rsvp_me_install(){
 	global $wpdb;
 	
 	$table_prefix = $wpdb->prefix . "rsvp_me_";
-	
-	$tables = array(
-		"settings" 		 => $table_prefix . "settings",
-		"events"			 => $table_prefix . "events",
-		"respondents"  => $table_prefix . "respondents"
-	);
-	
-	 require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); //required for dbDelta()
-	
-	//settings table
-	if($wpdb->get_var("show tables like '" . $tables["settings"] ."'") != $tables["settings"] ) {
-	
-		$sql = "CREATE TABLE " . $tables["settings"] . " (
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			version varchar(255) NOT NULL,
-			license varchar(255) NOT NULL,
-			UNIQUE KEY id (id)
-		);";
-		
-		$wpdb->query($sql);
-		
-		$rows_affected = $wpdb->insert( $table_prefix . "settings", array( 'version' => RSVP_ME_VERSION, 'license' => 'free version' ) );
-	}
-	
-	//events table
-	if($wpdb->get_var("show tables like '" . $tables["events"] . "'") != $tables["events"] ) {
-	
-		$sql = "CREATE TABLE " . $tables["events"] . " (
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			title varchar(255) NOT NULL,
-			description text NOT NULL,
-			venue varchar(255) NOT NULL,
-			address varchar(255) NOT NULL,
-			city varchar(255) NOT NULL,
-			state varchar(3) NOT NULL,
-			zip char(5) NOT NULL,
-			event_date_time datetime NOT NULL,
-			UNIQUE KEY id (id)
-		);";
-		
-		$wpdb->query($sql);
-		
-	}
 
+	require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); //required for dbDelta()
+	
 	//respondents table
-	if($wpdb->get_var("show tables like '" . $tables["respondents"] . "'") != $tables["respondents"] ) {
+	if($wpdb->get_var("show tables like '" . $table_prefix . "respondents" . "'") != $table_prefix . "respondents" ) {
 	
 		$sql = "CREATE TABLE " . $tables["respondents"] . " (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -73,7 +32,8 @@ function rsvp_me_install(){
 		$wpdb->query($sql);
 		
 	}
-
+	//set a temporary activeated_plugin option to be refereneced for after registration specific actions
+	add_option('Activated_Plugin', 'rsvp-me');
 }
 
 function get_rsvp_event_by_id($id){
