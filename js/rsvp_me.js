@@ -13,6 +13,11 @@ var rsvpMe; // put our namespace in global scope
 		
 		showEvent : function(id){      
 			
+			// don't show overlay if form for this specific event is found
+			if(document.getElementById("rsvp_form_"+id)){
+				return false;
+			}
+
 			$.post(ajaxurl, { action: 'rsvp_me_event_data', id : id }, function(data){
 				//check for leading '0' that wp adds, if there remove
 
@@ -46,15 +51,12 @@ var rsvpMe; // put our namespace in global scope
 			var tmpl = this.clone.html();
 			var reg;
 
-			for(field in event){
-				reg = new RegExp("{:" + field + "}");
-				tmpl = tmpl.replace(reg, event[field]);
-			}
-			//for whatever reason.. its' skipping id... 
-			// when ran a 2nd time it gets it?
-			for(field in event){
-				reg = new RegExp("{:" + field + "}");
-				tmpl = tmpl.replace(reg, event[field]);
+
+			while(/{:(.*)}/.test(tmpl)){
+				for(field in event){
+					reg = new RegExp("{:" + field + "}");
+					tmpl = tmpl.replace(reg, event[field]);
+				}
 			}
 
 			var tmpl = "<div class='rsvp-me-form-wrapper'>" + tmpl + "</div>";
@@ -128,7 +130,7 @@ var rsvpMe; // put our namespace in global scope
 			}
 					
 			$.post(ajaxurl, data, function(data){
-	
+		
 				if(data.slice(-1) == "0"){
 					data = data.slice(0, -1);
 				}
@@ -149,9 +151,10 @@ var rsvpMe; // put our namespace in global scope
 					setTimeout("jQuery('#event_form_wrapper').trigger('close')", 3000);
 					//setTimeout("$('.rsvp-me-form-wrapper').trigger('close')", 3000);
 				}else{
-					$(document).scrollTop(0);
 					setTimeout("jQuery('.alert-box').fadeOut();", 3000);
 				}
+				$(document).scrollTop(0);
+
 				return false;
 
 			});

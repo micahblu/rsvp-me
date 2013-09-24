@@ -4,7 +4,7 @@ if( ! function_exists( 'event_create_post_type' ) ) :
 
 	function event_create_post_type() {
 		$labels = array(
-			'name' => __( 'Event' ),
+			'name' => __( 'Events' ),
 			'singular_name' => __( 'Event' ),
 			'add_new' => __( 'Add event' ),
 			'all_items' => __( 'All events' ),
@@ -92,9 +92,7 @@ if( ! function_exists( 'event_create_post_type' ) ) :
 		$rsvp
 		// Echo out the field
 		?>
-		<link rel="stylesheet" href="<?php echo plugins_url('rsvp-me/js/jquery-ui.css"'); ?>">
-	  <script src="<?php echo plugins_url('rsvp-me/js/jquery-ui.js"'); ?>"></script>
-
+		
 		<style>
 			.ui-datepicker-trigger{
 				float:right;
@@ -182,15 +180,6 @@ if( ! function_exists( 'event_create_post_type' ) ) :
 				</td>
 			</tr>
 		</table>
-		<script>
-		$.datepicker.setDefaults({
-		  showOn: "both",
-		  buttonImageOnly: true,
-		  buttonImage: '<?php echo plugins_url("rsvp-me/images/calendar.png"); ?>',
-		  buttonText: "Calendar"
-		});
-		$( ".datepicker" ).datepicker();
-		</script>
 	<?php
 	}
  
@@ -271,14 +260,14 @@ function respondent_metabox(){
 				<th>Email</th>
 				<th>Message</th>
 				<th>Response</th>
-				<th>Response on</th>
+				<th>Responded on</th>
 			</tr>
 		</thead>
 		<tbody>
 		<?php foreach($rsvps as $field => $respondent) : ?>
 			<tr>
 				<td><?php echo $respondent['fname'] . " " . $respondent['lname']; ?></td>
-				<td><?php echo $respondent['email']; ?></td>
+				<td><a href="mailto:<?php echo $respondent['email']; ?>"><?php echo $respondent['email']; ?></a></td>
 				<td><?php echo $respondent['msg']; ?></td>
 				<td><?php echo $respondent['response']; ?></td>
 				<td><?php echo ltrim( date("F jS Y h:ia", strtotime($respondent['time_accepted'])), '0') ?></td>

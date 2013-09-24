@@ -17,7 +17,7 @@ define('RSVP_ME_DIR_NAME', basename(RSVP_ME_FILE_PATH));
 
 $siteurl = get_option('siteurl'); 
 
-define('PLUGIN_PATH', $siteurl . '/wp-content/plugins/rsvp-me');
+define('RSVP_ME_PLUGIN_URI', $siteurl . '/wp-content/plugins/rsvp-me');
 
 
 include (RSVP_ME_FILE_PATH . "/includes/rsvpme_functions.php");
@@ -39,7 +39,7 @@ if( is_admin() ){
  * add default styles 
  */
 function add_styles() {
-	wp_register_style("rsvpMeStyles", PLUGIN_PATH . "/rsvpme.css");
+	wp_register_style("rsvpMeStyles", RSVP_ME_PLUGIN_URI . "/rsvpme.css");
 	wp_enqueue_style("rsvpMeStyles");
 }
 
@@ -47,15 +47,15 @@ add_action('wp_print_styles', 'add_styles');
 
 function rsvp_me_scripts(){
 
-	wp_enqueue_script("jquery-ui", PLUGIN_PATH . "/js/jquery-ui.js", "jquery", null, true);
+	wp_enqueue_script("jquery-ui", RSVP_ME_PLUGIN_URI . "/js/jquery-ui.js", "jquery", null, true);
 
-	wp_enqueue_script("lightbox", PLUGIN_PATH . "/js/jquery.lightbox_me.js", "jquery", null, true);
+	wp_enqueue_script("lightbox", RSVP_ME_PLUGIN_URI . "/js/jquery.lightbox_me.js", "jquery", null, true);
 	
 	/* rsvm me scripts */
-	wp_register_script("rsvpMe", PLUGIN_PATH . "/js/rsvp_me.js", null, null, true);
+	wp_register_script("rsvpMe", RSVP_ME_PLUGIN_URI . "/js/rsvp_me.js", null, null, true);
 	wp_enqueue_script("rsvpMe");
 
-	wp_register_script("rsvpMeCookie", PLUGIN_PATH . "/js/Cookie.js", null, null, true);
+	wp_register_script("rsvpMeCookie", RSVP_ME_PLUGIN_URI . "/js/Cookie.js", null, null, true);
 	wp_enqueue_script("rsvpMeCookie");
 }
 add_action('wp_head', 'rsvp_me_scripts');	
@@ -63,7 +63,7 @@ add_action('wp_head', 'rsvp_me_scripts');
 function rsvp_me_footer(){ ?>
   <script type='text/javascript'>
 
-		var plugin_path = "<?= PLUGIN_PATH ?>";
+		var plugin_path = "<?= RSVP_ME_PLUGIN_URI ?>";
 		var ajaxurl = "<?= admin_url('admin-ajax.php'); ?>";
 		var rsvpCookie; //put our cookie var in the main scope
 		
@@ -103,6 +103,7 @@ function submit_rsvp(){
 	foreach($_REQUEST as $field => $value){
 		${$field} = $wpdb->escape(urldecode($value));
 	}
+
 	//first let's check to see if this user has already responded
 	$row = $wpdb->get_row("SELECT email FROM " . $wpdb->prefix . "rsvp_me_respondents WHERE email='$email' AND event_id='$event_id'", ARRAY_N);
 
@@ -110,7 +111,7 @@ function submit_rsvp(){
 		echo json_encode(array("error" => "duplicate"));
 	}
 	else{
-		$wpdb->query("INSERT INTO " . $wpdb->prefix . "rsvp_me_respondents
+		$affected = $wpdb->query("INSERT INTO " . $wpdb->prefix . "rsvp_me_respondents
 					  VALUES(NULL, '$event_id', '$fname', '$lname', '$email', '$response', '$msg', NOW())");
 		echo json_encode(array("success" => true));
 	}

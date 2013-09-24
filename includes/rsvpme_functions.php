@@ -81,7 +81,6 @@ function get_rsvp_event_by_id($id){
 	//prepare an event array and return, start with basic event post info
 	$eventpost = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "posts WHERE ID=$id", ARRAY_A);
 	
-
 	if(count($eventpost) < 1) return array("error" => "Empty result");
 
 	$event = array();
@@ -149,18 +148,6 @@ function rsvp_me_get_events($month, $year){
 		}
 	}
 	return $events;
-
-	/*
-	foreach($rows as $row){
-		if(!isset($events[$row['ymd']])){
-			$events[$row['ymd']] = array();
-		}
-		// we use an array here to account for possibility of multiple events for this day
-		// added 4-23-12 per recommendation by Vegard Kamben of Norway!
-		array_push($events[$row['ymd']], $row);
-	}
-	return $events;
-	*/
 }
 
 function rsvp_me_get_respondents($id){
@@ -168,6 +155,7 @@ function rsvp_me_get_respondents($id){
 			
 	$rows = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "rsvp_me_respondents
 								WHERE event_id = '$id'", ARRAY_A);
+
 	return $rows;
 }
 
@@ -429,7 +417,7 @@ function rsvp_me_event_form($handle, $event=NULL){
 			<tr>
 				<td>
 				Date<br />
-				<input type="text" onclick="cal.appendCalendar(this, '400', '300', '<?php echo PLUGIN_PATH ?>')" name="date" readonly="readonly" size='10' maxlength="10" value="<?php if(isset($date)) echo $date ?>" title="calfield" class='reqd' />
+				<input type="text" onclick="cal.appendCalendar(this, '400', '300', '<?php echo RSVP_ME_PLUGIN_URI ?>')" name="date" readonly="readonly" size='10' maxlength="10" value="<?php if(isset($date)) echo $date ?>" title="calfield" class='reqd' />
 				</td>
 				<td>
 				Hour<br />

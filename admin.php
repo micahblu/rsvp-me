@@ -3,25 +3,55 @@
  * RSVP ME Pro admin functions
  */
 global $wpdb;
-	
-//add the same stylesheet we use for wp
-add_action('admin_print_styles', 'add_styles');
 
-add_action('admin_menu', 'rsvp_me_plugin_menu');
-
-add_action('admin_init', 'rsvp_me_admin_scripts');
-
-//hook ajax method(s)
+// Hooks 
+add_action('admin_menu', 'rsvp_me_menu');
+add_action('admin_init', 'rsvp_me_register_admin_scripts');
+add_action('admin_footer', 'rsvp_me_admin_footer');
 add_action('wp_ajax_rsvp_me_update_settings', 'rsvp_me_update_settings');
 
-
-function rsvp_me_admin_scripts(){
+/**
+ * Register/enqueue the admin specific scripts & styles
+ *
+ * @since: 0.5
+ * @return void
+ * @param null
+ */
+function rsvp_me_register_admin_scripts(){
 	wp_enqueue_script('jquery');
-
-	wp_enqueue_script("rsvp-admin", RSVP_ME_FILE_PATH . "/js/admin.js", "jquery", null, true);
+	wp_enqueue_style("jquery-ui-css", RSVP_ME_PLUGIN_URI . "/js/jquery-ui.css");
+	wp_enqueue_script("rsvp-admin", RSVP_ME_PLUGIN_URI . "/js/admin.js", "jquery", null, true);
 }
 
-function rsvp_me_plugin_menu() {  
+function rsvp_me_admin_footer(){ ?>
+	<script type="text/javascript" src="<?php echo RSVP_ME_PLUGIN_URI . "/js/jquery-ui.js" ?>"></script>
+
+	<script type="text/javascript">
+
+	(function($){
+		
+		$.datepicker.setDefaults({
+			  showOn: "both",
+			  buttonImageOnly: true,
+			  buttonImage: "<?php echo RSVP_ME_PLUGIN_URI; ?>/images/calendar.png",
+			  buttonText: "Calendar"
+			});
+		$(".datepicker").datepicker();
+		
+	})(jQuery);
+
+	</script>
+	<?php
+}
+
+/**
+ * Register the Top Level menu
+ *
+ * @since: 0.5
+ * @return void
+ * @param null
+ */
+function rsvp_me_menu() {  
 	$top_menu_slug = "rsvp_events_overview";
 	add_menu_page('RSVP ME', 'RSVP ME', 'manage_options', $top_menu_slug, 'rsvp_me_settings', plugins_url('rsvp-me/images/red-pen.png'));
 }
@@ -32,15 +62,13 @@ function rsvp_me_update_settings(){
 
 function rsvp_me_settings(){ ?>
   <h2>RSVP ME Settings</h2>
-
+  <p><strong>Events Page URL:</strong> <?php echo bloginfo("siteurl") ?>/events ( <em>Permalinks must be set</em> )</p>
   <p>
-  	<input type="checkbox" name="rsvp_me_email_notify" /> <label for="rsvp_me_email_notify">Email Notifications?</label>
+  	<input type="checkbox" name="rsvp_me_email_notify" /> <label for="rsvp_me_email_notify">Notify me when someone RSVPs</label>
   </p>
-
 	<p>
   	<input type="checkbox" name="rsvpe_me_disable_css" /> <label for="rsvpe_me_disable_css">Disable default CSS?</label>
   </p>
-
 <?php }
 
 function rsvp_me_events_overview(){
