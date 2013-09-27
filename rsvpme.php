@@ -3,13 +3,13 @@
 Plugin Name: RSVP Me!
 Plugin URI: http://www.micahblu.com/products/rsvp-me-pro
 Description: A Robust RSVP plugin 
-Version: 1.5.0
+Version: 1.9.0
 Author: Micah Blu
 Author URI: http://www.micahblu.com
 License: GPL2
 */
 
-define('RSVP_ME_VERSION', '1.5.0');
+define('RSVP_ME_VERSION', '1.9.0');
 
 define('RSVP_ME_FILE_PATH', dirname(__FILE__));
 
