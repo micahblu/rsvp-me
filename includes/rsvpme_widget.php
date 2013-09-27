@@ -1,6 +1,8 @@
 <?php
 /**
- * Adds RSVP_ME_Widget widget.
+ * Declares our RSVP widget extension
+ *
+ * @since 1.5
  */
 class RSVP_ME_Widget extends WP_Widget {
 
@@ -29,7 +31,7 @@ class RSVP_ME_Widget extends WP_Widget {
 		echo $args['before_widget'];
 		if ( ! empty( $title ) )
 			echo $args['before_title'] . $title . $args['after_title'];
-		//echo __( 'Hello, World!', 'rsvp-me' );
+		
 		rsvp_me_calendar_widget();
 		echo $args['after_widget'];
 	}

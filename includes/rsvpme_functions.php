@@ -48,6 +48,7 @@ function get_rsvp_event_by_id($id){
 	$event['id'] = $eventpost[0]['ID'];
 	$event['title'] = $eventpost[0]['post_title'];
 	$event['description'] = $eventpost[0]['post_content'];
+	$event['link'] = $eventpost[0]['guid'];
 
 	// now add our post meta data
 	$meta = $wpdb->get_results("SELECT * FROM ". $wpdb->prefix . "postmeta WHERE post_id=" . $id, ARRAY_A);
@@ -62,27 +63,32 @@ function get_rsvp_event_by_id($id){
 			$event[preg_replace($ns, "" , $value['meta_key'])] = $value['meta_value'];
 		}
 	}
-	//let's format our time
+
+	// format our time
 	if( isset($event["hour"]) && isset($event["minute"]) && isset($event["meridian"]) ){
 		$event["time"] = $event["hour"] . ":" . $event["minute"] . $event["meridian"];
 	}
-	$event["featured_image"] = get_the_post_thumbnail($id);
-	return $event;
-}
 
-function _rsvp_me_get_events($month, $year){
-	$events_query = new WP_Query( array('post_type' => array('event', 'post'), 'meta_query' => array( array( '_rsvp_me_event_date' => 'teaser', 'value' => 'on' ) )) );
-while ( $events_query->have_posts() ) :
-    $events_query->the_post();
-    echo get_the_title() . '<br/>';
-endwhile;
+	// add a ymd version of the date, which is used by the calendar widget
+	if(isset($event["date"])){
+
+		$date = explode("/", $event['date']); // MM/DD/YYYY
+
+		// event matches.. we'll store by its y-m-d
+		$event["date_ymd"] = $date[2] . "-" . $date[0] . "-" . $date[1]; // this event machtes!
+	}
+
+	$event["featured_image"] = get_the_post_thumbnail($id);
+	$image_array = wp_get_attachment_image_src( get_post_thumbnail_id($id) );
+	$event["featured_image_src"] = $image_array[0];
+
+	return $event;
 }
 
 function rsvp_me_get_events($month, $year){
 	global $wpdb;
 	
 	$events = array();
-
 	//first grab our events
 	$eventrows = $wpdb->get_results("SELECT ID, post_title FROM " . $wpdb->prefix . "posts 
 															WHERE post_type='event'
@@ -91,22 +97,16 @@ function rsvp_me_get_events($month, $year){
 	// now our event meta.. specifically the date
 	foreach($eventrows as $event){
 
-		$meta = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "postmeta 
-																WHERE post_id=" . $event->ID . " 
-																AND meta_key='_rsvp_me_event_date'");
-		
-		$date = isset($meta[0]->meta_value) ? $meta[0]->meta_value : null;
-		
-		if($date){
-			//now to compare to incoming month / year
-			$date = explode("/", $date); // MM/DD/YYYY
+		$cur_event = get_rsvp_event_by_id($event->ID);
 
-			if($month == ltrim($date[0]) && $year == $date[2]){
-				// event matches.. we'll store by its y-m
-				$events[$date[2] . "-" . $date[0] . "-" . $date[1]][] = $event->ID; // this event machtes!
-			} 
+		$ymd = explode("-", $cur_event["date_ymd"]); // YYYY-MM-DD
+
+		if($ymd[0] == $year && ltrim($ymd[1]) == $month){
+			// this event matches the incoming year/month.. add to events array with ymd as key
+			$events[$cur_event['date_ymd']][] = $cur_event;
 		}
 	}
+
 	return $events;
 }
 
@@ -123,9 +123,9 @@ function rsvp_me_calendar_widget($options = array()){
 	/* output calendar widget */
 	?>
 	<div id='rsvp_me_calendar_widget'>   
-		<? rsvp_me_draw_calendar(NULL) ?>
+		<?php rsvp_me_draw_calendar(NULL) ?>
 	</div><!-- #rsvp_me_calendar_widget -->
-	<?
+	<?php
 }
 
 function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
@@ -145,7 +145,7 @@ function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 	
 	//we'll need to grab events for this year/month
 	$events = rsvp_me_get_events($month, $year);
-	
+
 	if(!$settings){
 		//set the default settings
 		$settings = array("class" => "rsvp_me_calendar",
@@ -189,7 +189,6 @@ function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 	/* keep going with days.... */
 	for($list_day = 1; $list_day <= $days_in_month; $list_day++)
 	{
-
 		//assess current ymd
 		$current_ymd = $year . "-" . ($month < 10 ? "0" . $month : $month) . "-" . ($list_day < 10 && strlen($list_day) < 2 ? "0" . $list_day : $list_day);
 		
@@ -198,39 +197,25 @@ function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 		// determine if there are is just one event for this day or multiple
 		$hasMultipleEvents = isset($events[$current_ymd]) && count($events[$current_ymd]) > 1 ? true : false;
 		
-		if($hasMultipleEvents)
-		{
-			//build array of id's/titles to be used by showMultipleEvents
-			$jsObjects = array(); 
-			foreach($events[$current_ymd] as $event)
-			{
-				$jsObjects[] = "{ id : " . $event["id"] ." }";
+		//build array of id's/titles to be used by showMultipleEvents
+		if($hasMultipleEvents){
+			
+			foreach($events[$current_ymd] as $field => $event){
+				$json[] = array2JSON($event, array("featured_image"));
 			}
-			$td_action = 'onclick="rsvpMe.showMultipleEvents([' . implode(",", $jsObjects) . '])"';	
+			$td_action = 'onclick="rsvpMe.showMultipleEvents([' . implode(",", $json) . '])"';	
 			$calendar .= '<td class="' . ($is_today ? 'calendar-today' : 'calendar-day') . ' ' . "multi-event-day" . '" ' . $td_action .'>';
+			
 		}else
-		{
-			$td_action = isset($events[$current_ymd]) ? 'onclick="rsvpMe.showEvent(' . $events[$current_ymd][0] . ')"' : '';
+		{	
+			if(isset($events[$current_ymd])){
+
+				$json = array2JSON($event, array("featured_image"));
+
+				$td_action = isset($events[$current_ymd]) ? 'onclick="rsvpMe.showEvent(' . $json . ')"' : '';
+			}
 			$calendar.= '<td class="' . ($is_today ? 'calendar-today' : 'calendar-day') . ' ' . (isset($events[$current_ymd]) ? "event-day" : "") . '" ' . $td_action .'>';
 		}
-		
-		
-		/** check for events !! 
-		if(isset($events[$current_ymd]))
-		{
-			if($hasMultipleEvents)
-			{
-				foreach($events[$current_ymd] as $event)
-				{
-					build_rsvp_form($event);
-				}
-			}
-			else
-			{
-				build_rsvp_form($events[$current_ymd][0]);
-			}
-		}**/
-		//die();
 		
 		/* add in the day number */
 		$calendar.= '<div class="day-number">'.$list_day.'</div>';
@@ -343,98 +328,6 @@ function select_state($default=NULL, $field_name='state'){
 	return $select;
 }
 
-function rsvp_me_event_form($handle, $event=NULL){
-	
-	if($event){
-		$timestamp = strtotime($event['event_date_time']);
-		$date = date("Y-m-d", $timestamp);
-		$hour = date("h", $timestamp);
-		$minute = date("i", $timestamp); 
-		$meridian = date("a", $timestamp);
-	}	
-	?>
-	<div id='admin-wrapper'>
-  	<h1><?=ucfirst($handle)?> Event</h1>
-		<form action="" method="post" name="">
-    <?php echo $handle=='edit' ? "<input type='hidden' name='id' value='" . $event["id"] ."' />\n" : "" ?>
-		<div class='form-segments'>
-		<p>What's the event?</p>
-  
-		<table cellpadding="10" cellpadding="5">
-			<tr>
-				<td>Event title</td><td><input type='text' id='text' name='title' value='<?php if(isset($event['title'])) echo stripslashes($event['title'])?>' /></td>
-			</tr>
-			<tr>
-				<td>Event description</td>
-				<td><textarea name='description' id='description' style='width:275px; height:75px'><?php if(isset($event['description'])) echo stripslashes($event['description'])?></textarea></td>
-			</tr>
-		</table>
-		</div>
-		
-		<div class='form-segments'>
-		<p>When does it occur?</p>
-		<table cellpadding="10" cellpadding="5">
-			<tr>
-				<td>
-				Date<br />
-				<input type="text" onclick="cal.appendCalendar(this, '400', '300', '<?php echo RSVP_ME_PLUGIN_URI ?>')" name="date" readonly="readonly" size='10' maxlength="10" value="<?php if(isset($date)) echo $date ?>" title="calfield" class='reqd' />
-				</td>
-				<td>
-				Hour<br />
-				<select name='hour'>
-					<?php for($i=1; $i < 13; $i++){
-						$h = ($i < 10 ? "0" . $i : $i);
-						echo "<option value='$h' " . ($hour == $h ? "selected='selected'" : "") . ">$h</option>\n";
-					} ?>
-				</select>
-				</td>
-				<td>
-				Minute<br />
-				<select name='minute'>
-					<?php for($i=0; $i < 61; $i++){
-						$min = ($i < 10 ? "0" . $i : $i);
-						echo "<option value='$min' " . ($minute == $min ? "selected='selected'" : "") . ">$min</option>\n";
-					} ?>
-				</select>
-				</td>
-				<td>
-				&nbsp;<br />
-				<select name='meridian'>
-				  <option value='am' <?php echo ( isset($meridian) && $meridian == "am") ? "selected='selected'" : "" ?>>AM</option>
-				  <option value='pm' <?php echo ( isset($meridian) && $meridian == "pm") ? "selected='selected'" : "" ?>>PM</option>
-				 </select>
-				</td>
-			</tr>
-			
-		</table>
-		</div>
-		
-		<div class='form-segments'>
-		<p>Where's it at?</p>
-		<table cellpadding="10" cellpadding="5">
-			<tr>
-				<td>Venue</td><td><input type='text' id='venue' name='venue' value='<?=stripslashes($event['venue'])?>' /></td>
-			</tr>
-			<tr>
-				<td>Address</td><td><textarea name='address' id='address'><?=$event['address']?></textarea></td>
-			</tr>
-			<tr>
-				<td>City</td><td><input type='text' name='city' id='city' value='<?=$event['city']?>' /></td>
-			</tr>
-			<tr>
-				<td>State</td><td><?= select_state($event['state']) ?></td>
-			</tr>
-			<tr>
-				<td>Zip</td><td><input type='text' name='zip' size='5' maxlength="5" value='<?=$event['zip']?>' /></td>
-			</tr>    
-		</table>
-		</div>
-		<p><input type='submit' name='submit' value='Submit' /></p>   
-		</form>
-	</div>
-	<? 
-}
-
 function buildTemplateFromValues($templ, $values, $echo=true){
 	if(!file_exists($templ) || empty($values)){
 		return false;
@@ -450,5 +343,44 @@ function buildTemplateFromValues($templ, $values, $echo=true){
 	}
 	if($echo) echo stripslashes($form);
 	else return $form;
+}
+
+function array2JSON($inArray, $skipkeys=array()){
+
+
+	if(!is_array($inArray)) return;
+
+	foreach($inArray as $field => $value){
+		//echo $field . " = " . $value . "<br />";
+		if(!is_array($value) && !in_array($field, $skipkeys)) {
+			$fields[] = $field . " : '" . addslashes($value) . "'";
+		}
+	}
+
+	if(is_array($fields)) return "{" . implode(",", $fields) . "}";
+	else return;
+}
+
+
+function prettyprint($array, $echo=true){
+	$str = '';
+	$str = preg_replace("/\n/", "<br />", print_r($array, true));
+	$str = preg_replace("/\t/", "&nbsp;&nbsp;", $str);
+	if($echo) echo $str;
+	else return $str;
+	/*
+	$str = '';
+	for($i == 0; $i < count($array); $i++){
+		echo $array[$i] . "<br />";
+		if(is_array($array[$i])){
+			$str .= prettyprint($array[$i]);
+		}else{
+			$line = $array[$i];
+			$line = preg_replace("/\n/", "<br />", $line);
+			$line = preg_replace("/\t/", "&nbsp;&nbsp;", $line);
+			$str .= $line;
+		}
+	}*/
+	return $str;
 }
 ?>

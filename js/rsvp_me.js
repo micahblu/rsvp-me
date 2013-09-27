@@ -9,26 +9,15 @@ var rsvpMe; // put our namespace in global scope
 	rsvpMe = {
 		lb : {}, //lightbox object
 		self : this,
-		clone : null,
+		clones : [],
 		
-		showEvent : function(id){      
-			
-			// don't show overlay if form for this specific event is found
-			if(document.getElementById("rsvp_form_"+id)){
-				return false;
-			}
+		showEvent : function(event){
 
-			$.post(ajaxurl, { action: 'rsvp_me_event_data', id : id }, function(data){
-				//check for leading '0' that wp adds, if there remove
+			// do not show an overlay for this event if current page is this event
+			if(document.getElementById("event_form_"+event.id)) return false;
 
-				if(data.slice(-1) == "0"){
-					data = data.slice(0, -1);
-				}
-				var jsondata = $.parseJSON(data);
-
-				rsvpMe.buildRSVPMeForm(jsondata);
-				return;
-			});
+			event.featured_image = '<img src="' + event.featured_image_src + '" alt="" />';
+			rsvpMe.buildRSVPMeForm(event);
 		},
 		
 		/**
@@ -40,24 +29,14 @@ var rsvpMe; // put our namespace in global scope
 		 */
 		buildRSVPMeForm : function(event){
 
-			//first make sure we're not already on that event's page
-			if(document.getElementById("rsvp_form_" + event.id)){
-				//return false;
-			}
-			if(!this.clone){
-				this.clone = $("#event_form_wrapper").clone();
+			if(!this.clones['rsvp_form']){
+				this.clones['rsvp_form'] = $("#event_form_wrapper").clone();
 			}
 
-			var tmpl = this.clone.html();
+			var tmpl = this.clones['rsvp_form'].html();
 			var reg;
 
-
-			while(/{:(.*)}/.test(tmpl)){
-				for(field in event){
-					reg = new RegExp("{:" + field + "}");
-					tmpl = tmpl.replace(reg, event[field]);
-				}
-			}
+			tmpl = renderTemplate(tmpl, event);
 
 			var tmpl = "<div class='rsvp-me-form-wrapper'>" + tmpl + "</div>";
 			var html = $("#event_form_wrapper").html(tmpl);
@@ -67,9 +46,28 @@ var rsvpMe; // put our namespace in global scope
 		},
 
 		showMultipleEvents : function(events){
-		},
+	
+			if(!this.clones['single_event_overview_tmpl']){
+				this.clones['single_event_overview_tmpl'] = $("#single_event_overview_tmpl").clone();
+			}
+
+			var tmpl = this.clones["single_event_overview_tmpl"].html();
+			var html = '';
+			
+			for(obj in events){
+				events[obj].featured_image = '<img src="' + events[obj].featured_image_src + '" alt="" />';
+				html += renderTemplate(tmpl, events[obj]);
+			}
 		
-		showMultiEvent : function(sel){
+			html = "<div style='padding:65px; background:white'><h1>Multiple Events</h1>" + html + "</div>";
+		
+			self.lb = $(html);
+			$(self.lb).lightbox_me();
+
+			/*
+			$(".rsvp-me-event").click(function(e){
+				
+			})*/
 		},
 
 		cancel : function(){
@@ -81,7 +79,7 @@ var rsvpMe; // put our namespace in global scope
 			var valid=true;
 			var selected = 0;
 			var fields = {};
-	
+			//alert($"#rsvp_form_"+id));
 			//var form = document.getElementById("rsvp_form_"+id);
 			$("#rsvp_form_"+id + " input").each(function(index){
 				
@@ -124,24 +122,37 @@ var rsvpMe; // put our namespace in global scope
 			};
 
 			if ( $('.rsvp-me-form-wrapper').length > 0) { 
-			  $(".rsvp-me-form-wrapper").html("<div style='padding:65px' id='rsvp_msg'><h2>Sending RSVP...</h2></div>");	
+			  $(".rsvp-me-form-wrapper").html("<div style='padding:65px' class='rsvp_msg'><h2>Sending RSVP...</h2></div>");	
 				$(".rsvp-me-form-wrapper").css("position", "fixed");
-				$(".rsvp-me-form-wrapper").css("top", ($(window).height() / 2 ) - ($(".rsvp-me-form-wrapper").height() / 2 ) + "px"); 
+				
+				$(".rsvp-me-form-wrapper").css("top", ($(window).height() / 2 ) - ($(".rsvp-me-form-wrapper").height() / 2 ) + "px"); 				
+				$(".rsvp-me-form-wrapper").css("left", ($(window).width() / 2 ) - ($(".rsvp-me-form-wrapper").width() / 2 ) + "px"); 
+				
+				// Set the width to it's current size so it won't change with the following server response msg
+				$(".rsvp-me-form-wrapper").css("width", $(".rsvp-me-form-wrapper").width());
+				$(".rsvp-me-form-wrapper").css("height", $(".rsvp-me-form-wrapper").height());
 			}
 					
 			$.post(ajaxurl, data, function(data){
-		
+
 				if(data.slice(-1) == "0"){
 					data = data.slice(0, -1);
 				}
 				var response = $.parseJSON(data);
 
+				for(field in response){
+					//alert(field + " = " + response[field]);
+				}
+
 				if(response.success){
-					$("#rsvp_msg").html("<p class='alert-box success'>woohoo you're RSVP'd!</p>");
+
+					$(".rsvp_msg").html("<p class='rsvp-me-alert-box success'>woohoo you're RSVP'd!</p>");
 				}else if(response.error == "duplicate"){
-					$("#rsvp_msg").html("<p class='alert-box alert'>We already have a reservation for that email</p>");
+
+					$(".rsvp_msg").html("<p class='rsvp-me-alert-box alert'>We already have a reservation for that email</p>");
 				}else{
-					$("#rsvp_msg").html("<p class='alert-box alert'>There was an unidentified error. Please try again later</p>");
+
+					$(".rsvp_msg").html("<p class='rsvp-me-alert-box alert'>There was an unidentified error. Please try again later</p>");
 				}
 				
 				if ( $('.rsvp-me-form-wrapper').length > 0) {
@@ -222,6 +233,32 @@ var rsvpMe; // put our namespace in global scope
 		}
 	}
 
+	/**
+	 * Template Engine, renders template, replaces template placeholders with object vars
+	 *
+	 * @param tmpl (String) Template html as a string object
+	 * @param obj (Object) object with field=>value pairings to match template placeholders
+	 * @since 1.9
+	 */
+	function renderTemplate(tmpl, obj){
+		var reg;
+		//alert(tmpl);
+		var maxattempts = 50;
+		var str = "";
+		var i;
+		while(/{:(.*)}/.test(tmpl)){
+			for(field in obj){
+				//alert(field + " = " + obj[field]);
+				//str += field + " = " + obj[field] + "\n";
+				reg = new RegExp("{:" + field + "}");
+				tmpl = tmpl.replace(reg, obj[field]);
+			}
+			//return false;
+			//i++;
+			//if(i == maxattempts) return;
+		}
+		return tmpl;
+	}
 	function stripslashes (str) {
 	  // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
 	  // +   improved by: Ates Goral (http://magnetiq.com)

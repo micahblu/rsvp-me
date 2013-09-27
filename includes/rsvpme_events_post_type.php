@@ -4,8 +4,8 @@ if( ! function_exists( 'event_create_post_type' ) ) :
 
 	function event_create_post_type() {
 		$labels = array(
-			'name' => __( 'Events' ),
-			'singular_name' => __( 'Event' ),
+			'name' => __( 'RSVP Events' ),
+			'singular_name' => __( 'RSVP Event' ),
 			'add_new' => __( 'Add event' ),
 			'all_items' => __( 'All events' ),
 			'add_new_item' => __( 'Add event' ),
@@ -282,7 +282,7 @@ function respondent_metabox(){
 /**
  * Designate our custome archive and single Event page templates
  */
-add_filter( 'template_include', 'my_plugin_templates' );
+//add_filter( 'template_include', 'my_plugin_templates' );
 function my_plugin_templates( $template ) {
     $post_types = array( 'event' );
 
@@ -293,6 +293,42 @@ function my_plugin_templates( $template ) {
 
     return $template;
 }
+
+function rsvp_me_event_page($content){
+	global $post;
+
+	if($post->post_type != "event") return $content;
+
+	$fields = array(
+		'venue_name' => '', 
+		'date' => '', 
+		'hour' => '', 
+		'minute' => '', 
+		'meridian' => '', 
+		'address' => '', 
+		'state' => '', 
+		'city' => '', 
+		'zip' => ''
+	);
+
+	//prepare are values array for the template engine
+	$rsvp_me['id'] = get_the_id();
+	$rsvp_me["title"] = get_the_title();
+	$rsvp_me["description"] = $content;
+	$rsvp_me["featured_image"] = get_the_post_thumbnail(get_the_ID());
+
+	foreach($fields as $field => $value){
+		$rsvp_me[$field] = get_post_meta($post->ID, '_rsvp_me_event_' . $field, true); 
+	}
+	$rsvp_me["time"] = $rsvp_me["hour"] . ":" . $rsvp_me["minute"] . $rsvp_me["meridian"];
+
+	$content = buildTemplateFromValues(RSVP_ME_FILE_PATH . "/themes/default/event.html", $rsvp_me, false);
+
+	return $content;
+}
+
+add_filter("the_content", "rsvp_me_event_page");
+//add_filter("the_title", "rsvp_me_event_title");
 
 /**
  * Add custom columns to our Events Custom Post Type
@@ -307,7 +343,8 @@ function rsvp_me_columns_head($defaults) {
 	$defaults['event_date'] = 'Event Date';
   $defaults['respondents'] = 'Respondents';  
   return $defaults;  
-}  
+}
+
 function rsvp_me_columns_content($column_name, $post_ID) {  
 
   switch($column_name){ 
@@ -326,8 +363,5 @@ function rsvp_me_columns_content($column_name, $post_ID) {
 			echo (isset($event["date"]) ? $event["date"] : "");
 			break;
   }
-
-}  
-
-//add_action('init', 'register_events_post_type');
+}
 ?>

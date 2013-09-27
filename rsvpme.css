@@ -170,3 +170,38 @@ div.form-segments{
 #admin-events-wrapper table tr.event_rsvps{
 	background: white;
 }
+
+
+.rsvp-me-event{
+	float:left;
+	margin-right: 15px;
+	background: #f2f2f2;
+	width: 275px;
+	font-size: .75em;
+	padding: 15px;
+	box-sizing: border-box;
+}
+
+.rsvp-me-event:last-child{
+	margin-right: 0px;
+}
+
+
+.rsvp-me-event-meta,
+.rsvp-me-entry-header{
+	float:left;
+	padding-right: 15px;
+	box-sizing: border-box;
+	width: 50%;
+}
+
+.rsvp-me-event-form{
+	float:left;
+	width: 50%;
+	box-sizing: border-box;
+}
+
+.rsvp-me-event-form input[type="text"],
+.rsvp-me-event-form textarea{
+	width: 100%;
+}

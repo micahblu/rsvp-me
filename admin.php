@@ -74,7 +74,7 @@ function rsvp_me_admin_footer(){ ?>
  */
 function rsvp_me_menu() {  
 	$top_menu_slug = "rsvp_events_settings";
-	add_menu_page('RSVP ME', 'RSVP ME', 'manage_options', $top_menu_slug, 'rsvp_me_settings', plugins_url('rsvp-me/images/red-pen.png'));
+	//add_menu_page('RSVP ME', 'RSVP ME', 'manage_options', $top_menu_slug, 'rsvp_me_settings', plugins_url('rsvp-me/images/red-pen.png'));
 }
 
 function rsvp_me_update_settings(){
@@ -91,7 +91,7 @@ function rsvp_me_update_settings(){
  */
 function rsvp_me_settings(){ ?>
   <h2>RSVP ME Settings</h2>
-  <p><strong>Events Page URL:</strong> <?php echo bloginfo("siteurl") ?>/events ( <em>Permalinks must be set</em> )</p>
+  <p><strong>Notifications</strong></p>
   <p>
   	<input type="checkbox" name="rsvp_me_email_notify" /> <label for="rsvp_me_email_notify">Notify me when someone RSVPs</label>
   </p>
@@ -150,36 +150,36 @@ function rsvp_me_build_event_rsvps($rsvps, $id){
 	
 	?>
 	<tr class='event_rsvps' id='event_rsvps_<?= $id?>' style='display:none'>
-        <td colspan='5'>
-        <div>
-        <table width='100%' cellpadding='5'>
-        	<tr>
-            	<th>Respondent</th>
-                <th>Email</th>
-                <th>Response</th>
-                <th>Message</th>
-                <th>Time of response</th>
-            </tr>
-        	<? $count = count($rsvps); for($i=0; $i < $count; $i++): ?>
-                <tr>
-                	<td><?= $rsvps[$i]['fname'] . " " . $rsvps[$i]['lname'] ?></td>
-                    <td><?= $rsvps[$i]['email'] ?></td>
-                    <td><?= $rsvps[$i]['response'] ?></td>
-                    <td><?= $rsvps[$i]['msg'] ?></td>
-                    <td><?= date("F jS g:i a", strtotime($rsvps[$i]['time_accepted'])) ?></td>
-                </tr>
-            <? endfor; ?>   
-            
+    <td colspan='5'>
+    <div>
+    <table width='100%' cellpadding='5'>
+    	<tr>
+        	<th>Respondent</th>
+            <th>Email</th>
+            <th>Response</th>
+            <th>Message</th>
+            <th>Time of response</th>
+        </tr>
+    	<? $count = count($rsvps); for($i=0; $i < $count; $i++): ?>
             <tr>
-            	<td colspan="5">
-                	<a href='Javascript: toggle_rsvps(<?= $id ?>)'>Close</a>
-                </td>
+            	<td><?= $rsvps[$i]['fname'] . " " . $rsvps[$i]['lname'] ?></td>
+                <td><?= $rsvps[$i]['email'] ?></td>
+                <td><?= $rsvps[$i]['response'] ?></td>
+                <td><?= $rsvps[$i]['msg'] ?></td>
+                <td><?= date("F jS g:i a", strtotime($rsvps[$i]['time_accepted'])) ?></td>
             </tr>
-        </table>
-        </div>
-        </td>
-    </tr>
-    <?
+        <? endfor; ?>   
+        
+        <tr>
+        	<td colspan="5">
+            	<a href='Javascript: toggle_rsvps(<?= $id ?>)'>Close</a>
+            </td>
+        </tr>
+    </table>
+    </div>
+    </td>
+</tr>
+<?
 }
 
 function rsvp_me_add_event(){
@@ -228,11 +228,9 @@ function rsvp_me_edit_event(){
 	}
 	
 	$sql = "SELECT * FROM " . $wpdb->prefix . "rsvp_me_events WHERE id='$id'";
-	
 	$eventdata = $wpdb->get_row($sql, 'ARRAY_A');
-	
-	rsvp_me_event_form('edit', $eventdata);
 
+	rsvp_me_event_form('edit', $eventdata);
 }
 
 function rsvp_me_delete_event(){
@@ -244,5 +242,4 @@ function rsvp_me_delete_event(){
 	
 	echo "<h2>Event successfully removed</h2>";
 }
-
 ?>

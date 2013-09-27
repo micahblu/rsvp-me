@@ -74,7 +74,11 @@ function rsvp_me_footer(){ ?>
 
 	</script>
 	<div id="event_form_wrapper" style="display:none">
-		<?php include RSVP_ME_FILE_PATH . "/themes/default/event.html"; ?>
+		<?php include RSVP_ME_FILE_PATH . "/themes/default/event-overlay.html"; ?>
+	</div>
+
+	<div id="single_event_overview_tmpl" style="display:none">
+		<?php include RSVP_ME_FILE_PATH . "/themes/default/events.html"; ?>
 	</div>
   <?php
 }
