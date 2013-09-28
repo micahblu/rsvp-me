@@ -91,8 +91,8 @@ function rsvp_me_get_events($month, $year){
 	$events = array();
 	//first grab our events
 	$eventrows = $wpdb->get_results("SELECT ID, post_title FROM " . $wpdb->prefix . "posts 
-															WHERE post_type='event'
-															AND post_status='publish'");
+																	 WHERE post_type='event'
+																	AND post_status='publish'");
 
 	// now our event meta.. specifically the date
 	foreach($eventrows as $event){
@@ -106,7 +106,6 @@ function rsvp_me_get_events($month, $year){
 			$events[$cur_event['date_ymd']][] = $cur_event;
 		}
 	}
-
 	return $events;
 }
 
@@ -209,10 +208,12 @@ function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 		}else
 		{	
 			if(isset($events[$current_ymd])){
+				
+				
+				$json = array2JSON($events[$current_ymd][0], array("featured_image"));
+				
 
-				$json = array2JSON($event, array("featured_image"));
-
-				$td_action = isset($events[$current_ymd]) ? 'onclick="rsvpMe.showEvent(' . $json . ')"' : '';
+				$td_action = isset($events[$current_ymd][0]) ? 'onclick="rsvpMe.showEvent(' . $json . ')"' : '';
 			}
 			$calendar.= '<td class="' . ($is_today ? 'calendar-today' : 'calendar-day') . ' ' . (isset($events[$current_ymd]) ? "event-day" : "") . '" ' . $td_action .'>';
 		}

@@ -1,0 +1,41 @@
+	<div class="rsvp_msg"></div>
+	<p>{:description}</p>
+	<section class="rsvp-me-event-meta">
+		<h3>{:venue_name}</h3>
+		<p>{:address}<br>
+		{:city}, {:state} {:zip}</p>
+		<p>
+			<strong>Date</strong>: {:date}<br />
+			<strong>Time</strong>: {:time}
+		</p>
+	</section>
+
+
+	<section class="rsvp-me-event-form">
+		<h3>Are you coming?<br /> Then RSVP below!</h3>
+		<form id="rsvp_form_{:id}" action="" method="" onsubmit="return rsvpMe.submitRsvp({:id})">
+			<input type="hidden" name="rsvp_event_id" value="{:id}">	
+			<p>
+			<label for="fname">First name</label><br />
+			<input class="reqd" type="text" name="fname" />
+			</p>
+			<p>
+			<label for="lname">Last name</label><br />
+			<input class="reqd" type="text" name="lname" />
+			</p>
+			<p>
+			<label for="email">Email</label><br />
+			<input class="reqd" type="text" name="email" />
+			</p>
+			<p>
+			<input type="radio" name="response" value="accepted"> I'm Definitely coming!<br>
+			<input type="radio" name="response" value="maybe"> I might come.<br>
+			<input type="radio" name="response" value="declined"> Sorry can't make it.<br>
+			</p>
+			<p>Want to send an additional message?<br>
+			
+			<textarea id="rsvp_msg" name="msg"></textarea></p>
+
+			<p><input type="submit" name="submit" value="RSVP Me"></p>
+		</form>
+	</section>

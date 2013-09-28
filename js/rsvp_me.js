@@ -13,9 +13,9 @@ var rsvpMe; // put our namespace in global scope
 		clones : [],
 		
 		showEvent : function(event){
-
+	
 			// do not show an overlay for this event if current page is this event
-			if(document.getElementById("event_form_"+event.id)) return false;
+			if(document.getElementById("rsvp_form_"+event.id)) return false;
 
 			event.featured_image = '<img src="' + event.featured_image_src + '" alt="" />';
 			rsvpMe.buildRSVPMeForm(event);

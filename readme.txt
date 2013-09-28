@@ -1,29 +1,34 @@
 === RSVP ME ===
-
-=== Plugin Name ===
 Contributors: MicahBlu
 Donate link: http://micahblu.com/products/rsvp-me
-Tags: rsvp plugin, rsvp widget, event, rsvp events, rsvp calendar, Events, Event Calendar, Event Widget, widget, Event, Event plugin, organize, plan, venue, catering, organization, reserve, reservations, reservation, byob
+Tags: rsvp plugin, rsvp widget, event, rsvp events, rsvp calendar, Events, Event Calendar, Event Widget, widget, Event, Event plugin, organize, plan, venue, catering, planning, planner, organization, wedding, guestlist, reserve, reservations, reservation, byob
 Requires at least: 2.0.2
-Tested up to: 3.5.1
-Stable tag: 1.9.0
+Tested up to: 3.6.1
+Stable tag: 1.9.1
 
 == Description ==
 RSVP ME is a simple and powerful Wordpress plugin that allows you to create events that your site visitors can RSVP to via the event's page or thorough a calendar widget. 
 
+= Features =
+* RSVP Evnent Calendar widget (single event for that day opens in a clean lightbox overlay)
+* RSVP Events are Native Custom Post types, so they're in the Wordpress Ecosystem
+* Specify Venue, address, date, etc.
+* Reservers can send an additional message with their response
+* Supports multiple events in a day
+* Events are searchable
+* Permalinks are supported so http://yoursite.com/events/my-special-event takes you to the single RSVP event page
+* RSVP submissions are done with ajax
 
 == Installation ==
 
 This section describes how to install the plugin and get it working.
 
-e.g.
-
 1. Unpack downloaded zip
 2. Upload the whole directory to the /wp-content/plugins/ directory.
 3. Activate the plugin through the 'Plugins' menu in WordPress.
 4. Add the RSVP ME Calendar widget to a sidebar.
-5. Add events from the RSVP Me admin section and your users will be 
-able to RSVP from the RSVP Me widget calendar!
+5. Add events from the RSVP Events section and your users will be 
+able to RSVP from the RSVP Me widget calendar or from the single Event page
 
 == Frequently Asked Questions ==
 
@@ -37,6 +42,10 @@ here: http://micahblu.com and get in touch.
 
 == Changelog ==
 
+09-28-2013
+ 1. Fixed an installation database error whereas the respondents table was not being created
+ 2. Cleaned up the default alert messages
+ 3. Added plugin banner
 
 09-27-2013
  1. Major update, events are now native custom post types
