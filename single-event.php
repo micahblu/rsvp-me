@@ -4,7 +4,7 @@
  *
  * @package WordPress
  * @subpackage RSVP ME
- * @since RSVPE ME 1.9.0
+ * @since RSVP ME 1.9.0
  */
 
 get_header(); ?>

@@ -205,3 +205,22 @@ div.form-segments{
 .rsvp-me-event-form textarea{
 	width: 100%;
 }
+
+/** Default alert messages */
+.rsvp_me_alert{
+	display: none;
+}
+
+.rsvp-me-alert-box{
+	display:block;
+	width: 100%;
+	padding: 10px;
+}
+
+.success{
+	background-color: #5da423;
+}
+
+.error, .alert{
+	background-color: #c60f13;
+}

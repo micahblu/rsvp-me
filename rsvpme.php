@@ -52,11 +52,9 @@ function rsvp_me_scripts(){
 	wp_enqueue_script("lightbox", RSVP_ME_PLUGIN_URI . "/js/jquery.lightbox_me.js", "jquery", null, true);
 	
 	/* rsvm me scripts */
-	wp_register_script("rsvpMe", RSVP_ME_PLUGIN_URI . "/js/rsvp_me.js", null, null, true);
-	wp_enqueue_script("rsvpMe");
+	wp_register_script("rsvp-me", RSVP_ME_PLUGIN_URI . "/js/rsvp_me.js", null, null, true);
+	wp_enqueue_script("rsvp-me");
 
-	wp_register_script("rsvpMeCookie", RSVP_ME_PLUGIN_URI . "/js/Cookie.js", null, null, true);
-	wp_enqueue_script("rsvpMeCookie");
 }
 add_action('wp_head', 'rsvp_me_scripts');	
 
@@ -64,14 +62,8 @@ function rsvp_me_footer(){ ?>
   <script type='text/javascript'>
 
 		var plugin_path = "<?php echo RSVP_ME_PLUGIN_URI ?>";
-		var ajaxurl = "<?php echo str_replace(get_site_url(), "", admin_url('admin-ajax.php')); ?>";
-		var rsvpCookie; //put our cookie var in the main scope
-		
-		(function(){
-			//init our cookie
-			rsvpCookie = new Cookie("visitordata");
-		})();
-
+		//var ajaxurl = "<?php echo str_replace(get_site_url(), "", admin_url('admin-ajax.php')); ?>";
+		var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
 	</script>
 	<div id="event_form_wrapper" style="display:none">
 		<?php include RSVP_ME_FILE_PATH . "/themes/default/event-overlay.html"; ?>

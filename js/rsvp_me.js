@@ -2,6 +2,7 @@
  * Main js file
  * 
  * @dep jquery
+ * @since 0.5
  */
 var rsvpMe; // put our namespace in global scope
 (function($){
@@ -64,10 +65,6 @@ var rsvpMe; // put our namespace in global scope
 			self.lb = $(html);
 			$(self.lb).lightbox_me();
 
-			/*
-			$(".rsvp-me-event").click(function(e){
-				
-			})*/
 		},
 
 		cancel : function(){
@@ -75,7 +72,7 @@ var rsvpMe; // put our namespace in global scope
 		},
 		
 		submitRsvp : function(id){
-			
+
 			var valid=true;
 			var selected = 0;
 			var fields = {};
@@ -122,7 +119,8 @@ var rsvpMe; // put our namespace in global scope
 			};
 
 			if ( $('.rsvp-me-form-wrapper').length > 0) { 
-			  $(".rsvp-me-form-wrapper").html("<div style='padding:65px' class='rsvp_msg'><h2>Sending RSVP...</h2></div>");	
+				/*
+			  $(".rsvp-me-form-wrapper").html("<div style='padding:65px'><h2>Sending RSVP...</h2></div>");	
 				$(".rsvp-me-form-wrapper").css("position", "fixed");
 				
 				$(".rsvp-me-form-wrapper").css("top", ($(window).height() / 2 ) - ($(".rsvp-me-form-wrapper").height() / 2 ) + "px"); 				
@@ -131,40 +129,45 @@ var rsvpMe; // put our namespace in global scope
 				// Set the width to it's current size so it won't change with the following server response msg
 				$(".rsvp-me-form-wrapper").css("width", $(".rsvp-me-form-wrapper").width());
 				$(".rsvp-me-form-wrapper").css("height", $(".rsvp-me-form-wrapper").height());
+				*/
 			}
 					
+		
 			$.post(ajaxurl, data, function(data){
-
+	
 				if(data.slice(-1) == "0"){
 					data = data.slice(0, -1);
 				}
 				var response = $.parseJSON(data);
 
-				for(field in response){
-					//alert(field + " = " + response[field]);
-				}
+				$(".rsvp_me_alert").html(""); // make sure the message el is clear of previous elements
 
 				if(response.success){
 
-					$(".rsvp_msg").html("<p class='rsvp-me-alert-box success'>woohoo you're RSVP'd!</p>");
+					$(".rsvp_me_alert").html("<p class='rsvp-me-alert-box success'>woohoo you're RSVP'd!</p>");
+
 				}else if(response.error == "duplicate"){
-
-					$(".rsvp_msg").html("<p class='rsvp-me-alert-box alert'>We already have a reservation for that email</p>");
+			
+					$(".rsvp_me_alert").html("<p class='rsvp-me-alert-box alert'>We already have a reservation for that email</p>");
 				}else{
-
-					$(".rsvp_msg").html("<p class='rsvp-me-alert-box alert'>There was an unidentified error. Please try again later</p>");
+			
+					$(".rsvp_me_alert").html("<p class='rsvp-me-alert-box alert'>There was an unidentified error. Please try again later</p>");
 				}
 				
+				$(".rsvp_me_alert").fadeIn();
+
 				if ( $('.rsvp-me-form-wrapper').length > 0) {
-					$(".rsvp-me-form-wrapper").css("position", "fixed");
-					$(".rsvp-me-form-wrapper").css("top", ($(window).height() / 2 ) - ($(".rsvp-me-form-wrapper").height() / 2 ) + "px"); 
+					//$(".rsvp-me-form-wrapper").css("position", "fixed");
+					//$(".rsvp-me-form-wrapper").css("top", ($(window).height() / 2 ) - ($(".rsvp-me-form-wrapper").height() / 2 ) + "px"); 
 			
-					setTimeout("jQuery('#event_form_wrapper').trigger('close')", 3000);
+					//setTimeout("jQuery('#event_form_wrapper').trigger('close')", 3000);
+					setTimeout("jQuery('.rsvp_me_alert').fadeOut();", 3000);
 					//setTimeout("$('.rsvp-me-form-wrapper').trigger('close')", 3000);
 				}else{
-					setTimeout("jQuery('.alert-box').fadeOut();", 3000);
+					setTimeout("jQuery('.rsvp_me_alert').fadeOut();", 3000);
+
 				}
-				$(document).scrollTop(0);
+				//$(document).scrollTop(0);
 
 				return false;
 
