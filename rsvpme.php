@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: RSVP Me!
-Plugin URI: http://www.micahblu.com/products/rsvp-me-pro
+Plugin URI: http://www.micahblu.com/products/rsvp-me
 Description: A Robust RSVP plugin 
 Version: 1.9.0
 Author: Micah Blu
@@ -63,8 +63,8 @@ add_action('wp_head', 'rsvp_me_scripts');
 function rsvp_me_footer(){ ?>
   <script type='text/javascript'>
 
-		var plugin_path = "<?= RSVP_ME_PLUGIN_URI ?>";
-		var ajaxurl = "<?= admin_url('admin-ajax.php'); ?>";
+		var plugin_path = "<?php echo RSVP_ME_PLUGIN_URI ?>";
+		var ajaxurl = "<?php echo str_replace(get_site_url(), "", admin_url('admin-ajax.php')); ?>";
 		var rsvpCookie; //put our cookie var in the main scope
 		
 		(function(){
@@ -117,7 +117,10 @@ function submit_rsvp(){
 	else{
 		$affected = $wpdb->query("INSERT INTO " . $wpdb->prefix . "rsvp_me_respondents
 					  VALUES(NULL, '$event_id', '$fname', '$lname', '$email', '$response', '$msg', NOW())");
-		echo json_encode(array("success" => true));
+		
+					  
+		if($affected > 0) echo json_encode(array("success" => true));
+		else echo json_encode(array("error" => "There was an error adding your RSVP"));
 	}
 }
 

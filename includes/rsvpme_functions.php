@@ -17,23 +17,23 @@ function rsvp_me_install(){
 	//respondents table
 	if($wpdb->get_var("show tables like '" . $table_prefix . "respondents" . "'") != $table_prefix . "respondents" ) {
 	
-		$sql = "CREATE TABLE " . $tables["respondents"] . " (
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			event_id mediumint(9) NOT NULL,
+		$sql = "CREATE TABLE " . $table_prefix . "respondents (
+			id INT NOT NULL AUTO_INCREMENT,
+			event_id INT NOT NULL,
 			fname varchar(255) NOT NULL,
 			lname varchar(255) NOT NULL,
 			email varchar(255) NOT NULL,
 			response enum('accepted', 'declined', 'maybe') NOT NULL,
 			msg mediumtext NULL,
-			time_accepted datetime NOT NULL,
-			UNIQUE KEY id (id)
+			time_accepted DATETIME NOT NULL,
+			UNIQUE KEY id (id),
+			PRIMARY KEY (id)
 		);";
 				
-		$wpdb->query($sql);
-		
+		$affected = $wpdb->query($sql);
 	}
 	//set a temporary activeated_plugin option to be refereneced for after registration specific actions
-	add_option('Activated_Plugin', 'rsvp-me');
+	//add_option('Activated_Plugin', 'rsvp-me');
 }
 
 function get_rsvp_event_by_id($id){
