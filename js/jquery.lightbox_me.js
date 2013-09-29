@@ -238,7 +238,7 @@
         closeEsc: true,
 
         // behavior
-        destroyOnClose: false,
+        destroyOnClose: true,
         showOverlay: true,
         parentLightbox: false,
 

@@ -38,7 +38,7 @@ var rsvpMe; // put our namespace in global scope
 			var reg;
 
 			tmpl = renderTemplate(tmpl, event);
-
+			
 			var tmpl = "<div class='rsvp-me-form-wrapper'>" + tmpl + "</div>";
 			var html = $(tmpl);
 
