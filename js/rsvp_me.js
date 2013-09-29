@@ -29,18 +29,18 @@ var rsvpMe; // put our namespace in global scope
 		 * @since  1.5.0
 		 */
 		buildRSVPMeForm : function(event){
-
+			
 			if(!this.clones['rsvp_form']){
 				this.clones['rsvp_form'] = $("#event_form_wrapper").clone();
 			}
-
+	
 			var tmpl = this.clones['rsvp_form'].html();
 			var reg;
 
 			tmpl = renderTemplate(tmpl, event);
 
 			var tmpl = "<div class='rsvp-me-form-wrapper'>" + tmpl + "</div>";
-			var html = $("#event_form_wrapper").html(tmpl);
+			var html = $(tmpl);
 
 	    self.lb = $(html);
 	    $(self.lb).lightbox_me();
