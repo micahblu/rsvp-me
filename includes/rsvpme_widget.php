@@ -77,7 +77,8 @@ class RSVP_ME_Widget extends WP_Widget {
 
 } // class Foo_Widget
 
-add_action( 'widgets_init', function(){
-     register_widget( 'RSVP_ME_Widget' );
-});
+function register_rsvp_me_widget(){
+	register_widget( 'RSVP_ME_Widget' );
+}
+add_action( 'widgets_init', "register_rsvp_me_widget");
 ?>

@@ -89,8 +89,12 @@ function rsvp_me_event_data() {
 
 /* Front-side Ajax Methods */ 
 function update_calendar(){
-	rsvp_me_draw_calendar(NULL, $_GET['month'], $_GET['year']);
-	//echo "|"; //place the bar to separate our response from wordpress's
+	$year = isset($_GET['year']) ? $_GET['year'] : date("Y"); //default to current year
+	$month = isset($_GET['month']) ? $_GET['month'] : date("n"); //default to current month
+	
+	//we'll need to grab events for this year/month
+	$events = rsvp_me_get_events($month, $year);
+	rsvp_me_draw_calendar($events, $month, $year);
 }
 
 function submit_rsvp(){
@@ -109,7 +113,6 @@ function submit_rsvp(){
 	else{
 		$affected = $wpdb->query("INSERT INTO " . $wpdb->prefix . "rsvp_me_respondents
 					  VALUES(NULL, '$event_id', '$fname', '$lname', '$email', '$response', '$msg', NOW())");
-		
 					  
 		if($affected > 0) echo json_encode(array("success" => true));
 		else echo json_encode(array("error" => "There was an error adding your RSVP"));

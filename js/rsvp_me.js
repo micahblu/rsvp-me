@@ -117,21 +117,6 @@ var rsvpMe; // put our namespace in global scope
 				msg : escape(document.getElementById("rsvp_form_"+id)["msg"].value),
 				event_id : escape(fields["rsvp_event_id"])
 			};
-
-			if ( $('.rsvp-me-form-wrapper').length > 0) { 
-				/*
-			  $(".rsvp-me-form-wrapper").html("<div style='padding:65px'><h2>Sending RSVP...</h2></div>");	
-				$(".rsvp-me-form-wrapper").css("position", "fixed");
-				
-				$(".rsvp-me-form-wrapper").css("top", ($(window).height() / 2 ) - ($(".rsvp-me-form-wrapper").height() / 2 ) + "px"); 				
-				$(".rsvp-me-form-wrapper").css("left", ($(window).width() / 2 ) - ($(".rsvp-me-form-wrapper").width() / 2 ) + "px"); 
-				
-				// Set the width to it's current size so it won't change with the following server response msg
-				$(".rsvp-me-form-wrapper").css("width", $(".rsvp-me-form-wrapper").width());
-				$(".rsvp-me-form-wrapper").css("height", $(".rsvp-me-form-wrapper").height());
-				*/
-			}
-					
 		
 			$.post(ajaxurl, data, function(data){
 	
@@ -218,7 +203,7 @@ var rsvpMe; // put our namespace in global scope
 			
 			calmonth.appendChild(preloader);
 			
-			$.get(ajaxurl, data, function(data){
+			$.get(ajaxurl, data, function(data){	
 				
 				if(data.slice(-1) == "0"){
 					data = data.slice(0, -1);

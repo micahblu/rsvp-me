@@ -224,3 +224,8 @@ div.form-segments{
 .error, .alert{
 	background-color: #c60f13;
 }
+
+
+.rsvp-me-form-wrapper{
+	max-width: 750px;
+}

@@ -42,6 +42,9 @@ function rsvp_me_register_admin_scripts(){
 	wp_enqueue_script('jquery');
 	wp_enqueue_style("jquery-ui-css", RSVP_ME_PLUGIN_URI . "/js/jquery-ui.css");
 	wp_enqueue_script("rsvp-admin", RSVP_ME_PLUGIN_URI . "/js/admin.js", "jquery", null, true);
+
+	wp_enqueue_style( 'wp-color-picker' );
+	wp_enqueue_script( 'my-script-handle', plugins_url('js/admin.js', __FILE__ ), array( 'wp-color-picker' ), false, true );
 }
 
 function rsvp_me_admin_footer(){ ?>
@@ -74,172 +77,104 @@ function rsvp_me_admin_footer(){ ?>
  */
 function rsvp_me_menu() {  
 	$top_menu_slug = "rsvp_events_settings";
-	//add_menu_page('RSVP ME', 'RSVP ME', 'manage_options', $top_menu_slug, 'rsvp_me_settings', plugins_url('rsvp-me/images/red-pen.png'));
+	add_menu_page('RSVP ME', 'RSVP ME', 'manage_options', $top_menu_slug, 'rsvp_me_settings', plugins_url('rsvp-me/images/rsvp-me-wax.png'));
 }
 
 function rsvp_me_update_settings(){
 
-}
+	foreach($_POST as $field => $value){
+		if($field != "action"){
+			if(!get_option("_" . $field)){
+				add_option("_" . $field, $value);
+			}else{
+				update_option("_" . $field, $value);
+			}
+		}
+	}
+	echo json_encode(array("success" => true));
+}	
 
 /**
  * RSVP ME settings..
  * outputs html form for rsvp me settings 
  *
- * @since 1.9
+ * @since 1.9.0
  * @param null
  * @return null
  */
-function rsvp_me_settings(){ ?>
-  <h2>RSVP ME Settings</h2>
-  <p><strong>Notifications</strong></p>
-  <p>
-  	<input type="checkbox" name="rsvp_me_email_notify" /> <label for="rsvp_me_email_notify">Notify me when someone RSVPs</label>
-  </p>
-	<p>
-  	<input type="checkbox" name="rsvpe_me_disable_css" /> <label for="rsvpe_me_disable_css">Disable default CSS?</label>
-  </p>
+function rsvp_me_settings(){
+
+	$settings = get_rsvp_me_options();
+	?>
+  <img src="<?php echo plugins_url(); ?>/rsvp-me/images/rsvp-me-logo-r.png" class="icon32" alt="RSVP ME" /> <h2>RSVP ME Settings</h2>
+ 	
+ 	<div style="float:left; margin-left: 10px;">
+ 		  Want more? <strong><a href="#">Go Pro</a></strong></p>
+ 	</div>
+
+  <br style="clear:both" />
+  
+  <form id="rsvp_me_settings_form" method="post">
+
+  	<style>
+  	.rsvp-me-cal-options{
+  		float:left;
+  		margin-right: 15px;
+  		width: 300px;
+  	}
+  	.rsvp-me-cal-sample{
+  		float:left;
+  	}
+  	.rsvp-me-alert-box{
+			display:block;
+			width: intrinsic;
+			padding: 10px;
+		}
+
+		.success{
+			background-color: #5da423;
+		}
+
+		.error, .alert{
+			background-color: #c60f13;
+		}
+  	</style>
+  	<p><strong>Calendar Styles</strong></p>
+  	<div class="panel">
+	  	<div class="rsvp-me-cal-options">
+	  		<p>
+	  			<label for="rsvp_calendar_background">Table Cell Background</label><br />
+	  			<input type="text" name="rsvp_me_table_cell_bg" value="<?php echo $settings["rsvp_me_table_cell_bg"]; ?>" class="rsvp-me-color-field" data-default-color="<?php echo $settings["rsvp_me_table_cell_bg"]; ?>" />
+	  		</p>
+	  		<p>
+	  			<label for="rsvp_calendar_border">Table Border</label><br />
+	  			<input type="text" name="rsvp_me_table_border_color" value="<?php echo $settings["rsvp_me_table_border_color"]; ?>" class="rsvp-me-color-field" data-default-color="<?php echo $settings["rsvp_me_table_border_color"]; ?>" />
+	  		</p>
+	  		<p>
+	  			<label for="rsvp_calendar_text_color">Table Cell Text Color</label><br />
+	  			<input type="text" name="rsvp_me_table_cell_color" value="<?php echo $settings["rsvp_me_table_cell_color"]; ?>" class="rsvp-me-color-field" data-default-color="<?php echo $settings["rsvp_me_table_cell_color"]; ?>" />
+	  		</p>
+
+	  		<p>
+	  			<label for="rsvp_me_table_event_bg">Event Day Background</label><br />
+	  			<input type="text" name="rsvp_me_table_event_bg" value="<?php echo $settings["rsvp_me_table_event_bg"]; ?>" class="rsvp-me-color-field" data-default-color="<?php echo $settings["rsvp_me_table_event_bg"]; ?>" />
+	  		</p>
+	  	</div>
+
+	  	<div class="rsvp-me-cal-sample">
+	  		<div id='rsvp_me_calendar_widget'>   
+					<?php rsvp_me_draw_calendar(array(date("Y-m-d") => array()));  ?>
+				</div><!-- #rsvp_me_calendar_widget -->
+	  	</div>
+	  </div>
+  	<br style="clear:both" />
+  	
+	  <p><input class="button" type="submit" value="Update settings" /></p>
+	  <div class="rsvp-me-alert-msg"></div>
+
+	  <p>Be sure to checkout my other great <a target="_blank" href="http://micahblu.com/products">Themes & Plugins</a></p> 		
+
+	</form>
 <?php }
 
-/** -- D E P R E C A T E D -- */
-function rsvp_me_events_overview(){
-	?>
-	<div id='admin-wrapper'>
-		<h1>RSVP ME Events Overview</h1>
-			<?php
-			global $wpdb;
-			$sql = "SELECT * FROM " . $wpdb->prefix . "rsvp_me_events ORDER BY id DESC";
-			$rows = $wpdb->get_results($sql);
-			?>
-      <span id='rsvp_ajax_msg'></span>
-			<div id="admin-events-wrapper">	
-				<table cellpadding="0" cellspacing="0">
-					<tr>
-						<th>Event title</th>
-						<th>Venue</th>
-						<th>Date & time</th>
-	          <th>RSVPs</th>
-						<th></th>
-					</tr>
-					<?php
-					foreach($rows as $row){
-					
-						$rsvps = rsvp_me_get_respondents($row->id);					
-						$rsvp_count = count($rsvps);
-			
-						echo "<tr id='eventrow_" . $row->id . "'>\n";
-						echo "<td valign='top'>" . stripslashes($row->title) . "</td>\n";
-						echo "<td valign='top'>" . stripslashes($row->venue) . "</td>\n";
-						echo "<td valign='top'>" . date("F jS g:i a", strtotime($row->event_date_time)) . "</td>\n";
-						echo "<td valign='top'><a href='Javascript: toggle_rsvps($row->id)'>" . $rsvp_count . ($rsvp_count > 1 ? " people rsvpd" : " person has rsvpd") . "!</a></td>\n";
-						echo "<td><a href='?page=rsvp_me_edit_event&id=" . $row->id . "'>Edit</a> | ";
-						echo "<a href='Javascript: rsvp_me_delete_event(" . $row->id . ")' onclick='confirm(\"Are you sure you want to permanently delete this event?\")'>Delete</a></td>\n";
-						echo "</tr>\n";
-						
-						rsvp_me_build_event_rsvps($rsvps, $row->id);
-						
-						echo "<tr><td colspan='5'><div style='width:100%; height:2px; border-bottom: 1px solid #ccc'></div></td></tr>\n";
-					}
-					?>
-				</table>
-		</div>
-	</div>
-	<? 
-}
-
-function rsvp_me_build_event_rsvps($rsvps, $id){
-	
-	?>
-	<tr class='event_rsvps' id='event_rsvps_<?= $id?>' style='display:none'>
-    <td colspan='5'>
-    <div>
-    <table width='100%' cellpadding='5'>
-    	<tr>
-        	<th>Respondent</th>
-            <th>Email</th>
-            <th>Response</th>
-            <th>Message</th>
-            <th>Time of response</th>
-        </tr>
-    	<? $count = count($rsvps); for($i=0; $i < $count; $i++): ?>
-            <tr>
-            	<td><?= $rsvps[$i]['fname'] . " " . $rsvps[$i]['lname'] ?></td>
-                <td><?= $rsvps[$i]['email'] ?></td>
-                <td><?= $rsvps[$i]['response'] ?></td>
-                <td><?= $rsvps[$i]['msg'] ?></td>
-                <td><?= date("F jS g:i a", strtotime($rsvps[$i]['time_accepted'])) ?></td>
-            </tr>
-        <? endfor; ?>   
-        
-        <tr>
-        	<td colspan="5">
-            	<a href='Javascript: toggle_rsvps(<?= $id ?>)'>Close</a>
-            </td>
-        </tr>
-    </table>
-    </div>
-    </td>
-</tr>
-<?
-}
-
-function rsvp_me_add_event(){
-	
-	global $wpdb;
-	
-	if($_POST){
-		//declare post data vars
-		foreach($_POST as $field => $value) ${$field} = $value;
-		
-		$date_time = $date . " " . ($meridian == "pm" ? ($hour + 12) : $hour) . ":" . $minute . ":00";			
-		
-		$wpdb->query( $wpdb->prepare( "
-						INSERT INTO " . $wpdb->prefix . "rsvp_me_events
-						( id, title, description, venue, address, city, state, zip, event_date_time )
-						VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %s )", 
-						array(NULL, $title, $description, $venue, $address, $city, $state, $zip, $date_time) 
-						) 
-					);												   
-		
-		echo "<h2>Event added successfully</h2>\n";
-	}
-	rsvp_me_event_form('add');
-}
-
-function rsvp_me_edit_event(){
-	
-	global $wpdb;
-	
-	$id = $wpdb->escape($_REQUEST['id']);
-	
-	if($_POST){
-		//declare post data vars
-		foreach($_POST as $field => $value) ${$field} = $value;			
-		
-		$date_time = $date . " " . ($meridian == "pm" ? ($hour += 12) : $hour) . ":" . $minute . ":00";			
-		
-		$wpdb->update( $wpdb->prefix . "rsvp_me_events", 
-	  	array( 'title' => $title, 'description' => $description,
-			  'venue' => $venue, 'address' => $address, 
-			  'city' => $city, 'state' => $state,
-			  'zip' => $zip, 'event_date_time' => $date_time ), 
-	   	array( 'id' => $id )
-		  );
-		echo "<h2>Event edited successfully</h2>\n";
-	}
-	
-	$sql = "SELECT * FROM " . $wpdb->prefix . "rsvp_me_events WHERE id='$id'";
-	$eventdata = $wpdb->get_row($sql, 'ARRAY_A');
-
-	rsvp_me_event_form('edit', $eventdata);
-}
-
-function rsvp_me_delete_event(){
-	
-	global $wpdb;
-	$id = $wpdb->escape($_REQUEST['id']);
-	$sql = "DELETE FROM " . $wpdb->prefix . "rsvp_me_events WHERE id='$id' LIMIT 1";
-	$wpdb->query($sql);
-	
-	echo "<h2>Event successfully removed</h2>";
-}
 ?>

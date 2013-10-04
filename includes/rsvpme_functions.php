@@ -120,14 +120,87 @@ function rsvp_me_get_respondents($id){
 
 function rsvp_me_calendar_widget($options = array()){
 	/* output calendar widget */
+	$year = isset($_GET['year']) ? $_GET['year'] : date("Y"); //default to current year
+	$month = isset($_GET['month']) ? $_GET['month'] : date("n"); //default to current month
+	
+	//we'll need to grab events for this year/month
+	$events = rsvp_me_get_events($month, $year);
+	
 	?>
 	<div id='rsvp_me_calendar_widget'>   
-		<?php rsvp_me_draw_calendar(NULL) ?>
+		<?php rsvp_me_draw_calendar($events, $month, $year); ?>
 	</div><!-- #rsvp_me_calendar_widget -->
 	<?php
 }
 
-function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
+function get_rsvp_me_options(){
+	$defaults = array(
+		"rsvp_me_table_cell_bg" => "#ffffff",
+		"rsvp_me_table_border_color" => "#cccccc",
+		"rsvp_me_table_cell_color" => "#333333",
+		"rsvp_me_table_event_bg" => "#ffffcc"
+	);
+
+	$settings = array(
+		"rsvp_me_table_cell_bg" => get_option("_rsvp_me_table_cell_bg"),
+		"rsvp_me_table_border_color" => get_option("_rsvp_me_table_border_color"),
+		"rsvp_me_table_cell_color" => get_option("_rsvp_me_table_cell_color"),
+		"rsvp_me_table_event_bg" => get_option("_rsvp_me_table_event_bg")
+	);
+
+	foreach($settings as $setting => $value){
+		if($value == "") $settings[$setting] = $defaults[$setting];
+	}
+
+	return $settings;
+}
+
+function rsvp_me_calendar_styles(){ 
+	$settings = get_rsvp_me_options();
+
+	?>
+	<style>
+		#rsvp_calendar_head{
+			text-align: center;
+		}
+
+		#rsvp_me_event_calendar .prev{
+			float:left;
+		}
+
+		#rsvp_me_event_calendar .next{
+			float:right;
+		}
+
+		#rsvp_me_event_calendar table{
+			border-collapse: collapse;
+		}
+
+		#rsvp_me_event_calendar table tr{
+
+		}
+
+		#rsvp_me_event_calendar table tr th{
+
+		}	
+
+		#rsvp_me_event_calendar table tr td{
+			padding: 5px;
+			border-style: solid;
+			border-width: 1px;
+			border-color: <?php echo $settings["rsvp_me_table_border_color"]; ?>;
+			text-align: center;
+			color: <?php echo $settings["rsvp_me_table_cell_color"]; ?>;
+			background-color: <?php echo $settings["rsvp_me_table_cell_bg"]; ?>;
+		}
+
+		#rsvp_me_event_calendar table tr td.event-day{
+			background-color: <?php echo $settings["rsvp_me_table_event_bg"]; ?>;
+		}
+		</style>
+<?php }
+
+function rsvp_me_draw_calendar($events=NULL, $month=NULL, $year=NULL, $settings=NULL){
 	/** 	
 		Changelog:
 		-added div wrapper
@@ -138,13 +211,10 @@ function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 		Notes:
 		$obj needed as wordpress passes the first parameter
 	*/
-	
+
 	$year = $year ? $year : date("Y"); //default to current year
 	$month = $month ? $month : date("n"); //default to current month
 	
-	//we'll need to grab events for this year/month
-	$events = rsvp_me_get_events($month, $year);
-
 	if(!$settings){
 		//set the default settings
 		$settings = array("class" => "rsvp_me_calendar",
@@ -202,22 +272,24 @@ function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 			foreach($events[$current_ymd] as $field => $event){
 				$json[] = array2JSON($event, array("featured_image"));
 			}
+
 			$td_action = 'onclick="rsvpMe.showMultipleEvents([' . implode(",", $json) . '])"';	
 			$calendar .= '<td class="' . ($is_today ? 'calendar-today' : 'calendar-day') . ' ' . "multi-event-day" . '" ' . $td_action .'>';
 			
 		}else
 		{	
 			if(isset($events[$current_ymd])){
-				
-				
-				$json = array2JSON($events[$current_ymd][0], array("featured_image"));
-				
 
-				$td_action = isset($events[$current_ymd][0]) ? 'onclick="rsvpMe.showEvent(' . $json . ')"' : '';
+				//echo "<h1>" . print_r($events[$current_ymd],true). " is set!</h1>";
+				$json = array2JSON($events[$current_ymd][0], array("featured_image"));	
+
+				$td_action = isset($events[$current_ymd]) ? 'onclick="rsvpMe.showEvent(' . $json . ')"' : '';
 			}
 			$calendar.= '<td class="' . ($is_today ? 'calendar-today' : 'calendar-day') . ' ' . (isset($events[$current_ymd]) ? "event-day" : "") . '" ' . $td_action .'>';
 		}
 		
+		$td_action = ''; // empty action as default for next iteration
+
 		/* add in the day number */
 		$calendar.= '<div class="day-number">'.$list_day.'</div>';
 		$calendar.= '</td>';
@@ -257,6 +329,7 @@ function rsvp_me_draw_calendar($obj, $month=NULL, $year=NULL, $settings=NULL){
 	$calendar .= '</div>'; 
 	
 	/* all done, return result */
+	rsvp_me_calendar_styles();
 	echo $calendar;
 }
 
@@ -369,19 +442,6 @@ function prettyprint($array, $echo=true){
 	$str = preg_replace("/\t/", "&nbsp;&nbsp;", $str);
 	if($echo) echo $str;
 	else return $str;
-	/*
-	$str = '';
-	for($i == 0; $i < count($array); $i++){
-		echo $array[$i] . "<br />";
-		if(is_array($array[$i])){
-			$str .= prettyprint($array[$i]);
-		}else{
-			$line = $array[$i];
-			$line = preg_replace("/\n/", "<br />", $line);
-			$line = preg_replace("/\t/", "&nbsp;&nbsp;", $line);
-			$str .= $line;
-		}
-	}*/
 	return $str;
 }
 ?>
