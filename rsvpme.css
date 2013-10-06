@@ -2,7 +2,7 @@
 /* CSS Document */
 
 /* rsvp event calendar styles */
-
+/*
 #rsvp_me_event_calendar{
 	
 }
@@ -75,6 +75,8 @@ div.rsvp_me_calendar table tr td.multi-event-day{
 	cursor:pointer;
 	font-weight:bold;
 }
+*/
+
 
 /* foundation override */
 table tr.even, table tr.alt, table tr:nth-of-type(even) {

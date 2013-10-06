@@ -86,11 +86,14 @@ function rsvp_me_update_settings(){
 		if($field != "action"){
 			if(!get_option("_" . $field)){
 				add_option("_" . $field, $value);
+				$msg[] = "added " . $field . " = " . $value;
 			}else{
 				update_option("_" . $field, $value);
+				$msg[] = "updated " . $field . " = " . $value;
 			}
 		}
 	}
+
 	echo json_encode(array("success" => true));
 }	
 
@@ -104,7 +107,7 @@ function rsvp_me_update_settings(){
  */
 function rsvp_me_settings(){
 
-	$settings = get_rsvp_me_options();
+	$options = get_rsvp_me_options();
 	?>
   <img src="<?php echo plugins_url(); ?>/rsvp-me/images/rsvp-me-logo-r.png" class="icon32" alt="RSVP ME" /> <h2>RSVP ME Settings</h2>
  	
@@ -142,23 +145,20 @@ function rsvp_me_settings(){
   	<p><strong>Calendar Styles</strong></p>
   	<div class="panel">
 	  	<div class="rsvp-me-cal-options">
-	  		<p>
-	  			<label for="rsvp_calendar_background">Table Cell Background</label><br />
-	  			<input type="text" name="rsvp_me_table_cell_bg" value="<?php echo $settings["rsvp_me_table_cell_bg"]; ?>" class="rsvp-me-color-field" data-default-color="<?php echo $settings["rsvp_me_table_cell_bg"]; ?>" />
-	  		</p>
-	  		<p>
-	  			<label for="rsvp_calendar_border">Table Border</label><br />
-	  			<input type="text" name="rsvp_me_table_border_color" value="<?php echo $settings["rsvp_me_table_border_color"]; ?>" class="rsvp-me-color-field" data-default-color="<?php echo $settings["rsvp_me_table_border_color"]; ?>" />
-	  		</p>
-	  		<p>
-	  			<label for="rsvp_calendar_text_color">Table Cell Text Color</label><br />
-	  			<input type="text" name="rsvp_me_table_cell_color" value="<?php echo $settings["rsvp_me_table_cell_color"]; ?>" class="rsvp-me-color-field" data-default-color="<?php echo $settings["rsvp_me_table_cell_color"]; ?>" />
-	  		</p>
+	  		<?php
+	  			foreach($options as $option){
 
-	  		<p>
-	  			<label for="rsvp_me_table_event_bg">Event Day Background</label><br />
-	  			<input type="text" name="rsvp_me_table_event_bg" value="<?php echo $settings["rsvp_me_table_event_bg"]; ?>" class="rsvp-me-color-field" data-default-color="<?php echo $settings["rsvp_me_table_event_bg"]; ?>" />
-	  		</p>
+	  				switch($option["type"]){
+
+	  					case "color" : ?>
+	  						<p>
+					  			<label for="rsvp_calendar_background"><?php echo $option["name"]; ?></label><br />
+					  			<input type="text" name="<?php echo $option["id"] ?>" value="<?php echo $option['default']; ?>" class="rsvp-me-color-field" data-default-color="<?php echo $option['default']; ?>" />
+					  		</p>
+	  					<?php break;
+	  				}
+	  			}
+	  		?>
 	  	</div>
 
 	  	<div class="rsvp-me-cal-sample">

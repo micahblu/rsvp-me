@@ -134,34 +134,73 @@ function rsvp_me_calendar_widget($options = array()){
 }
 
 function get_rsvp_me_options(){
-	$defaults = array(
-		"rsvp_me_table_cell_bg" => "#ffffff",
-		"rsvp_me_table_border_color" => "#cccccc",
-		"rsvp_me_table_cell_color" => "#333333",
-		"rsvp_me_table_event_bg" => "#ffffcc"
-	);
 
-	$settings = array(
-		"rsvp_me_table_cell_bg" => get_option("_rsvp_me_table_cell_bg"),
-		"rsvp_me_table_border_color" => get_option("_rsvp_me_table_border_color"),
-		"rsvp_me_table_cell_color" => get_option("_rsvp_me_table_cell_color"),
-		"rsvp_me_table_event_bg" => get_option("_rsvp_me_table_event_bg")
-	);
+	$options[] = array(
+		'name' => 'Cell Background',
+		'desc' => '',
+		'id' => 'rsvp_me_table_cell_bg',
+		'default' => '#ffffff',
+		'type' => 'color' );
 
-	foreach($settings as $setting => $value){
-		if($value == "") $settings[$setting] = $defaults[$setting];
+	$options[] = array(
+		'name' => 'Border Color',
+		'desc' => '',
+		'id' => 'rsvp_me_table_border_color',
+		'default' => '#cccccc',
+		'type' => 'color' );
+
+	$options[] = array(
+		'name' => 'Font Color',
+		'desc' => '',
+		'id' => 'rsvp_me_table_cell_color',
+		'default' => '#333333',
+		'type' => 'color' );
+
+	$options[] = array(
+		'name' => 'Event Day Background',
+		'desc' => '',
+		'id' => 'rsvp_me_table_event_bg',
+		'default' => '#ffffcc',
+		'type' => 'color' );
+
+
+	// load values or set defaults
+
+	for($i=0; $i < count($options); $i++){
+
+		if(get_option("_" . $options[$i]['id'])){
+
+			//echo $options[$i]['name'] . " = " . get_option("_" . $options[$i]['id']) . "<br />";	
+			$options[$i]['default'] = get_option("_" . $options[$i]['id']);
+		}
 	}
 
-	return $settings;
+	return $options;
+}
+
+function get_rsvp_me_option_values(){
+	$options = get_rsvp_me_options();
+
+	$nv_pairs = array(); //name value pairs
+	foreach($options as $option){
+		$nv_pairs[$option['id']] = $option['default'];
+	}
+	return $nv_pairs;
 }
 
 function rsvp_me_calendar_styles(){ 
-	$settings = get_rsvp_me_options();
+	$settings = get_rsvp_me_option_values();
 
 	?>
 	<style>
+
+		#rsvp_me_event_calendar{
+			width: intrinsic;
+		}
+
 		#rsvp_calendar_head{
 			text-align: center;
+			width: 100%;
 		}
 
 		#rsvp_me_event_calendar .prev{
@@ -420,8 +459,7 @@ function buildTemplateFromValues($templ, $values, $echo=true){
 }
 
 function array2JSON($inArray, $skipkeys=array()){
-
-
+	
 	if(!is_array($inArray)) return;
 
 	foreach($inArray as $field => $value){

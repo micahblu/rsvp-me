@@ -21,7 +21,7 @@
 		});
 
 		$.post(ajaxurl, data, function(data){
-
+	
 			if(data.slice(-1) == "0"){
 				data = data.slice(0, -1);
 			}
