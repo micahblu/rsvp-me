@@ -190,12 +190,11 @@ function get_rsvp_me_option_values(){
 
 function rsvp_me_calendar_styles(){ 
 	$settings = get_rsvp_me_option_values();
-
 	?>
 	<style>
 
 		#rsvp_me_event_calendar{
-			width: intrinsic;
+			width: 100%;
 		}
 
 		#rsvp_calendar_head{
@@ -220,7 +219,7 @@ function rsvp_me_calendar_styles(){
 		}
 
 		#rsvp_me_event_calendar table tr th{
-
+			text-align: center;
 		}	
 
 		#rsvp_me_event_calendar table tr td{
@@ -235,6 +234,10 @@ function rsvp_me_calendar_styles(){
 
 		#rsvp_me_event_calendar table tr td.event-day{
 			background-color: <?php echo $settings["rsvp_me_table_event_bg"]; ?>;
+		}
+
+		#rsvp_me_event_calendar table tr td.calendar-today{
+			background-color: #ffffcc;
 		}
 		</style>
 <?php }

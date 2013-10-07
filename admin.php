@@ -1,6 +1,6 @@
 <?php
 /*
- * RSVP ME Pro admin functions
+ * RSVP ME admin functions
  */
 global $wpdb;
 
@@ -12,7 +12,6 @@ add_action('wp_ajax_rsvp_me_update_settings', 'rsvp_me_update_settings');
 
 
 function rsvp_me_init(){
-
 	//check to see if we've just activated
 	if(get_option('Activated_Plugin') == 'rsvp-me'){
 		delete_option('Activated_Plugin');
@@ -112,7 +111,7 @@ function rsvp_me_settings(){
   <img src="<?php echo plugins_url(); ?>/rsvp-me/images/rsvp-me-logo-r.png" class="icon32" alt="RSVP ME" /> <h2>RSVP ME Settings</h2>
  	
  	<div style="float:left; margin-left: 10px;">
- 		  Want more? <strong><a href="#">Go Pro</a></strong></p>
+ 		  Want more options and features? <strong><a href="#">Go Pro</a></strong></p>
  	</div>
 
   <br style="clear:both" />
