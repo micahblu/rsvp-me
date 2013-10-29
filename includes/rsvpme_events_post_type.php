@@ -1,5 +1,11 @@
 <?php
 
+add_action("after_theme_setup", "rsvp_me_theme_support");
+
+function rsvp_me_theme_support(){
+	add_theme_support('post-thumbnails',  array('event'));
+}
+
 if( ! function_exists( 'event_create_post_type' ) ) :
 
 	function event_create_post_type() {
@@ -45,8 +51,7 @@ if( ! function_exists( 'event_create_post_type' ) ) :
 			'menu_position' => 99,
 			'register_meta_box_cb' => 'event_add_post_type_metabox'
 		);
-		register_post_type( 'event', $args );
-		add_theme_support('post-thumbnails',  array('event'));  
+		register_post_type( 'event', $args );  
 
 		flush_rewrite_rules();
  		

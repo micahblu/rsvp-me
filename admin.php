@@ -111,7 +111,7 @@ function rsvp_me_settings(){
   <img src="<?php echo plugins_url(); ?>/rsvp-me/images/rsvp-me-logo-r.png" class="icon32" alt="RSVP ME" /> <h2>RSVP ME Settings</h2>
  	
  	<div style="float:left; margin-left: 10px;">
- 		  Want more options and features? <strong><a href="#">Go Pro</a></strong></p>
+ 		  Want more options and features? <strong><a target="_blank" href="http://micahblu.com/products/rsvp-me-events-pro/">Go Pro</a></strong></p>
  	</div>
 
   <br style="clear:both" />
