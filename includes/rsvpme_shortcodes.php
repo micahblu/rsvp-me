@@ -20,7 +20,7 @@ function rsvpme_event_form( $atts ){
 	), $atts ) );
 
 	if(isset($id)){ 
-		$event = get_rsvp_by_id($id);
+		$event = get_rsvp_event_by_id($id);
 		ob_start();
 		include RSVP_ME_FILE_PATH . "/themes/default/event.html";
 		$form = ob_get_contents();
@@ -29,7 +29,8 @@ function rsvpme_event_form( $atts ){
 		foreach($event as $field => $value){
 			$form = str_replace("{:" . $field . "}", $value, $form);
 		}
-
+		echo "<h2>" . $event['title'] . "</h2>\n";
+		echo $event['featured_image'];
 		echo stripslashes($form);
 	}
 }

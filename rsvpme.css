@@ -150,7 +150,15 @@ div.form-segments{
 	background-color: #c60f13;
 }
 
-
 .rsvp-me-form-wrapper{
 	max-width: 750px;
+}
+
+/* Default widget styles */
+#rsvp_me_event_calendar table{
+	width: 100%;
+}
+
+#rsvp_calendar_head{
+	padding: 10px 0;
 }

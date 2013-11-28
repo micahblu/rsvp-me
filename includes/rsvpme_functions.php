@@ -243,7 +243,7 @@ function rsvp_me_calendar_styles(){
 <?php }
 
 function rsvp_me_draw_calendar($events=NULL, $month=NULL, $year=NULL, $settings=NULL){
-	/** 	
+	/**
 		Changelog:
 		-added div wrapper
 		-added months array and header
