@@ -320,14 +320,15 @@ function rsvp_me_draw_calendar($events=NULL, $month=NULL, $year=NULL, $settings=
 			
 		}else
 		{	
-			if(isset($events[$current_ymd])){
+			if(isset($events[$current_ymd][0])){
 
 				//echo "<h1>" . print_r($events[$current_ymd],true). " is set!</h1>";
+
 				$json = array2JSON($events[$current_ymd][0], array("featured_image"));	
 
 				$td_action = isset($events[$current_ymd]) ? 'onclick="rsvpMe.showEvent(' . $json . ')"' : '';
 			}
-			$calendar.= '<td class="' . ($is_today ? 'calendar-today' : 'calendar-day') . ' ' . (isset($events[$current_ymd]) ? "event-day" : "") . '" ' . $td_action .'>';
+			$calendar.= '<td class="' . ($is_today ? 'calendar-today' : 'calendar-day') . ' ' . (isset($events[$current_ymd]) ? "event-day" : "") . '" ' . (isset($td_action) ? $td_action : '') .'>';
 		}
 		
 		$td_action = ''; // empty action as default for next iteration
