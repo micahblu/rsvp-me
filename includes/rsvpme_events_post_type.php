@@ -213,15 +213,15 @@ if( ! function_exists( 'event_create_post_type' ) ) :
 			// we'll put it into an array to make it easier to loop though
 	 
 	 		if(isset($_POST['event_post_noncename'])){
-				$event_post_meta['_rsvp_me_event_venue_name'] = $_POST['rsvp_me_event_venue_name'];
-				$event_post_meta['_rsvp_me_event_date'] = $_POST['rsvp_me_event_date'];
-				$event_post_meta['_rsvp_me_event_hour'] = $_POST['rsvp_me_event_hour'];
-				$event_post_meta['_rsvp_me_event_minute'] = $_POST['rsvp_me_event_minute'];
-				$event_post_meta['_rsvp_me_event_meridian'] = $_POST['rsvp_me_event_meridian'];
-				$event_post_meta['_rsvp_me_event_address'] = $_POST['rsvp_me_event_address'];
-				$event_post_meta['_rsvp_me_event_city'] = $_POST['rsvp_me_event_city'];
-				$event_post_meta['_rsvp_me_event_state'] = $_POST['rsvp_me_event_state'];
-				$event_post_meta['_rsvp_me_event_zip'] = $_POST['rsvp_me_event_zip'];
+				$event_post_meta['_rsvp_me_event_venue_name'] 	= $_POST['rsvp_me_event_venue_name'];
+				$event_post_meta['_rsvp_me_event_date'] 				= $_POST['rsvp_me_event_date'];
+				$event_post_meta['_rsvp_me_event_hour'] 				= $_POST['rsvp_me_event_hour'];
+				$event_post_meta['_rsvp_me_event_minute'] 			= $_POST['rsvp_me_event_minute'];
+				$event_post_meta['_rsvp_me_event_meridian'] 		= $_POST['rsvp_me_event_meridian'];
+				$event_post_meta['_rsvp_me_event_address'] 			= $_POST['rsvp_me_event_address'];
+				$event_post_meta['_rsvp_me_event_city'] 				= $_POST['rsvp_me_event_city'];
+				$event_post_meta['_rsvp_me_event_state'] 				= $_POST['rsvp_me_event_state'];
+				$event_post_meta['_rsvp_me_event_zip'] 					= $_POST['rsvp_me_event_zip'];
 		 
 				// add values as custom fields
 				foreach( $event_post_meta as $key => $value ) { // cycle through the $event_post_meta array
@@ -346,7 +346,8 @@ add_action('manage_event_posts_custom_column', 'rsvp_me_columns_content', 10, 2)
 function rsvp_me_columns_head($defaults) {  
 	$defaults['venue'] = 'Venue';
 	$defaults['event_date'] = 'Event Date';
-  $defaults['respondents'] = 'Respondents';  
+  $defaults['respondents'] = 'Respondents';
+  $defaults['id'] = 'ID';
   return $defaults;  
 }
 
@@ -366,6 +367,11 @@ function rsvp_me_columns_content($column_name, $post_ID) {
 		case 'event_date' :
 			$event = get_rsvp_event_by_id($post_ID);
 			echo (isset($event["date"]) ? $event["date"] : "");
+			break;
+
+		case 'id' :
+			$event = get_rsvp_event_by_id($post_ID);
+			echo $post_ID;
 			break;
   }
 }

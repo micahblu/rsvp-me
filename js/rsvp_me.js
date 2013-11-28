@@ -230,23 +230,18 @@ var rsvpMe; // put our namespace in global scope
 	 */
 	function renderTemplate(tmpl, obj){
 		var reg;
-		//alert(tmpl);
 		var maxattempts = 50;
 		var str = "";
 		var i;
 		while(/{:(.*)}/.test(tmpl)){
 			for(field in obj){
-				//alert(field + " = " + obj[field]);
-				//str += field + " = " + obj[field] + "\n";
 				reg = new RegExp("{:" + field + "}");
 				tmpl = tmpl.replace(reg, obj[field]);
 			}
-			//return false;
-			//i++;
-			//if(i == maxattempts) return;
 		}
 		return tmpl;
 	}
+
 	function stripslashes (str) {
 	  // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
 	  // +   improved by: Ates Goral (http://magnetiq.com)

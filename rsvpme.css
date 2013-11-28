@@ -162,3 +162,7 @@ div.form-segments{
 #rsvp_calendar_head{
 	padding: 10px 0;
 }
+
+#rsvp_me_event_calendar table tr td.event-day{
+	cursor: pointer;
+}
