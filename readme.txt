@@ -19,7 +19,6 @@ RSVP ME is a simple and powerful Wordpress plugin that allows you to create even
 * Permalinks are supported so http://yoursite.com/events/my-special-event takes you to the single RSVP event page (Permalinks must be properly setup)
 * RSVP submissions are done with ajax
 * A very nifty calendary widget styler
-* !Beta! Shortcodes are now present but not thoroughly tested.. use at your own risk as: [rsvp_event id="even_id"] where event id is the actual id of the event. You can find the event Id from the RSVP Events page in the respective event's row.
 
 == Installation ==
 
@@ -43,6 +42,13 @@ here: http://micahblu.com and get in touch.
 
 
 == Changelog ==
+
+11-28-2014
+ 1. Fixed runtime errors for undefined variables and fields
+ 2. Fixed a styling issue with calendar widget that prevented the calendar from being full width
+ 3. Fixed a missing beginning article tag in one of the event templates
+ 4. Fixed a shortcode error (Shortcode is still in Beta). Shortcodes are invoked witht the following: [rsvp_event id="even_id"] where event id is the actual integer id of the event. You can find the event Id from the RSVP Events page in the respective event's row.
+ 5. Added ID column to RSVP Events rows
 
 10-28-2013
  1. Fixed header already output error. Thanks Andy
@@ -75,7 +81,7 @@ here: http://micahblu.com and get in touch.
 
 09-23-2013
 
-* Event Shortcodes added
+* Event Shortcodes added (Beta)
 * Event RSVP forms are now templated
 * A cleaner more reliable lightbox is being used
 * Several minor bug fixes
@@ -94,7 +100,7 @@ here: http://micahblu.com and get in touch.
 
 05-22-2012
 
-* Cleaned up some css styling rules and checked it against the wordpress 3.5.1
+* Cleaned up some css styling rules and checked plugin against wordpress 3.5.1
 
 12-30-2010 updates by Micah Blu 
 
