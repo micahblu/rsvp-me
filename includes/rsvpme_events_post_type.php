@@ -273,7 +273,7 @@ function respondent_metabox(){
 			<tr>
 				<td><?php echo $respondent['fname'] . " " . $respondent['lname']; ?></td>
 				<td><a href="mailto:<?php echo $respondent['email']; ?>"><?php echo $respondent['email']; ?></a></td>
-				<td><?php echo $respondent['msg']; ?></td>
+				<td><?php echo urldecode($respondent['msg']); ?></td>
 				<td><?php echo $respondent['response']; ?></td>
 				<td><?php echo ltrim( date("F jS Y h:ia", strtotime($respondent['time_accepted'])), '0') ?></td>
 			</tr>
