@@ -101,12 +101,15 @@ function submit_rsvp(){
 	global $wpdb;
 	
 	foreach($_REQUEST as $field => $value){
-		${$field} = $wpdb->escape(urldecode($value));
+		${$field} = $value;
 	}
 
 	//first let's check to see if this user has already responded
-	$row = $wpdb->get_row("SELECT email FROM " . $wpdb->prefix . "rsvp_me_respondents WHERE email='$email' AND event_id='$event_id'", ARRAY_N);
-
+	$row = $wpdb->get_row(
+		$wpdb->prepare(
+			"SELECT email FROM " . $wpdb->prefix . "rsvp_me_respondents WHERE email='%s' AND event_id=%d", $email, $event_id
+		), ARRAY_A
+	);
 	if(count($row) > 0) {
 		echo json_encode(array("error" => "duplicate"));
 	}
@@ -120,7 +123,7 @@ function submit_rsvp(){
 }
 
 // event form ajax function
-add_action('wp_ajax_rsvp_me_event_data', 'rsvp_me_event_data');
+add_action('wp_ajax_rsvp_mevent_data', 'rsvp_me_event_data');
 add_action('wp_ajax_nopriv_rsvp_me_event_data', 'rsvp_me_event_data');
 
 // submit rsvp ajax function

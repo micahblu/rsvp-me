@@ -44,7 +44,6 @@ function get_rsvp_event_by_id($id){
 	if(count($eventpost) < 1) return array("error" => "Empty result");
 
 	$event = array();
-
 	$event['id'] = $eventpost[0]['ID'];
 	$event['title'] = $eventpost[0]['post_title'];
 	$event['description'] = $eventpost[0]['post_content'];

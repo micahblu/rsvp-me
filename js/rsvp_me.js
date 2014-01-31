@@ -119,7 +119,7 @@ var rsvpMe; // put our namespace in global scope
 			};
 		
 			$.post(ajaxurl, data, function(data){
-	
+
 				if(data.slice(-1) == "0"){
 					data = data.slice(0, -1);
 				}
