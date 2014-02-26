@@ -7,18 +7,18 @@ Tested up to: 3.8.1
 Stable tag: 1.9.5
 
 == Description ==
-RSVP ME is a simple yet powerful Wordpress plugin that allows you to create events that your site visitors can RSVP to via the event's page or thorough a calendar widget. 
+RSVP ME is a simple yet powerful Wordpress plugin which allows you to create events that your site visitors can RSVP to via the event's page or thorough a calendar widget. 
 
 = Features =
 * RSVP Event Calendar widget (single event for that day opens in a clean lightbox overlay)
-* RSVP Events are Native Custom Post types, so they're in the Wordpress Ecosystem
+* RSVP Events are Native Custom Post types that fully embrace the Wordpress Ecosystem
 * Specify Venue, address, date, etc.
 * Reservers can send an additional message with their response
 * Supports multiple events in a single day
 * Events are searchable
 * Permalinks are supported so http://yoursite.com/events/my-special-event takes you to the single RSVP event page (Permalinks must be properly setup)
 * RSVP submissions are done with ajax
-* A very nifty calendary widget styler
+* A very nifty calendar widget styler
 
 == Installation ==
 

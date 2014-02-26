@@ -79,8 +79,9 @@ function get_rsvp_event_by_id($id){
 
 	$event["featured_image"] = get_the_post_thumbnail($id);
 	$image_array = wp_get_attachment_image_src( get_post_thumbnail_id($id) );
-	$event["featured_image_src"] = $image_array[0];
-
+	if(!empty($image_array)){
+		$event["featured_image_src"] = $image_array[0];
+	}
 	return $event;
 }
 

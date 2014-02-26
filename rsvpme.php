@@ -52,15 +52,13 @@ function rsvp_me_scripts(){
 	wp_enqueue_script("lightbox", RSVP_ME_PLUGIN_URI . "/js/jquery.lightbox_me.js", "jquery", null, true);
 	
 	/* rsvm me scripts */
-	wp_register_script("rsvp-me", RSVP_ME_PLUGIN_URI . "/js/rsvp_me.js", null, null, true);
-	wp_enqueue_script("rsvp-me");
-
+	//wp_enqueue_script("handlebars", RSVP_ME_PLUGIN_URI . "/js/vendors/handlebars.js", null, null, true);
+	wp_enqueue_script("rsvp-me", RSVP_ME_PLUGIN_URI . "/js/rsvp_me.js", null, null, true);
 }
 add_action('wp_head', 'rsvp_me_scripts');	
 
 function rsvp_me_footer(){ ?>
   <script type='text/javascript'>
-
 		var plugin_path = "<?php echo RSVP_ME_PLUGIN_URI ?>";
 		//var ajaxurl = "<?php echo str_replace(get_site_url(), "", admin_url('admin-ajax.php')); ?>";
 		var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";

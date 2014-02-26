@@ -4,6 +4,10 @@
  * @dep jquery
  * @since 0.5
  */
+
+function escapeRegExp(str) {
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
 var rsvpMe; // put our namespace in global scope
 (function($){
 
@@ -15,7 +19,7 @@ var rsvpMe; // put our namespace in global scope
 		showEvent : function(event){
 	
 			// do not show an overlay for this event if current page is this event
-			if(document.getElementById("rsvp_form_"+event.id)) return false;
+			if(document.getElementById("rsvp_form_" + event.id)) return false;
 
 			event.featured_image = '<img src="' + event.featured_image_src + '" alt="" />';
 			rsvpMe.buildRSVPMeForm(event);
@@ -56,7 +60,7 @@ var rsvpMe; // put our namespace in global scope
 			var html = '';
 			
 			for(obj in events){
-				events[obj].featured_image = '<img src="' + events[obj].featured_image_src + '" alt="" />';
+				//events[obj].featured_image = '<img src="' + events[obj].featured_image_src + '" alt="" />';
 				html += renderTemplate(tmpl, events[obj]);
 			}
 		
@@ -228,7 +232,7 @@ var rsvpMe; // put our namespace in global scope
 	 * @param obj (Object) object with field=>value pairings to match template placeholders
 	 * @since 1.9
 	 */
-	function renderTemplate(tmpl, obj){
+	function _renderTemplate(tmpl, obj){
 		var reg;
 		var maxattempts = 50;
 		var str = "";
@@ -241,6 +245,57 @@ var rsvpMe; // put our namespace in global scope
 		}
 		return tmpl;
 	}
+
+	function renderTemplate(tmpl, obj){
+		var reg,
+			  maxattempts = 50,
+				i = 0;
+
+		var ifmatches = tmpl.match(/\[{2}#if(.[^\]]+)\]\](.*)\[{2}\/if\]{2}/gmi);
+
+		if(ifmatches.length > 0){
+
+			for(var i = 0; i <  ifmatches.length; i++){
+
+				var parts = tmpl.match(/\[{2}#if(.[^\]]+)\]\](.*)\[{2}\/if\]{2}/mi);
+
+				var condition = parts[1];
+				var contents = parts[2];
+	
+				var match = false;
+				for(var key in obj){
+					if(key == $.trim(condition)){
+						match = true;
+					}
+				}
+				if(!match){
+					tmpl = tmpl.replace(parts[0], '');
+				}else{
+					tmpl = tmpl.replace(parts[0], contents);
+				}
+			}
+		}
+
+		var tags = tmpl.match(/\[{2}\s?(.[^\[]+)\s?\]{2}/gmi);
+
+		for(key in tags){
+
+			tag = tags[key].replace(/[\[\]]/gm,'');
+
+			for(var symbol in obj){
+				if(tag == symbol){
+					console.log(tag + " = " + obj[symbol]);
+					tmpl = tmpl.replace(tags[key], obj[symbol]);
+				}
+			}
+		}
+
+		return tmpl;
+
+	}
+
+
+
 
 	function stripslashes (str) {
 	  // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
