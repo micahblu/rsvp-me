@@ -77,6 +77,8 @@ var rsvpMe; // put our namespace in global scope
 		
 		submitRsvp : function(id){
 
+			console.log("hit");
+
 			var valid=true;
 			var selected = 0;
 			var fields = {};

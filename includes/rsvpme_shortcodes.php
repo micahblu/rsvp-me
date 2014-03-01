@@ -4,6 +4,7 @@
  *
  * @author: Micah Blu
  * @since: 1.1.0
+ * @uses FooManChu
  */
 
 
@@ -21,17 +22,8 @@ function rsvpme_event_form( $atts ){
 
 	if(isset($id)){ 
 		$event = get_rsvp_event_by_id($id);
-		ob_start();
-		include RSVP_ME_FILE_PATH . "/themes/default/event.html";
-		$form = ob_get_contents();
-		ob_end_clean();
-
-		foreach($event as $field => $value){
-			$form = str_replace("{:" . $field . "}", $value, $form);
-		}
-		echo "<h2>" . $event['title'] . "</h2>\n";
-		echo $event['featured_image'];
-		echo stripslashes($form);
+		$template = file_get_contents(RSVP_ME_FILE_PATH . "/themes/default/event.fmc");
+		$foomanchu->render($template, $rsvp_me);
 	}
 }
 

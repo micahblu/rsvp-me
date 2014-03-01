@@ -301,8 +301,9 @@ function my_plugin_templates( $template ) {
 
 function rsvp_me_event_page($content){
 	global $post;
+	global $foomanchu;
 
-	if($post->post_type != "event") return $content;
+	if($post->post_type != "event" || !is_single($post) ) return $content;
 
 	$fields = array(
 		'venue_name' => '', 
@@ -317,17 +318,26 @@ function rsvp_me_event_page($content){
 	);
 
 	//prepare are values array for the template engine
-	$rsvp_me['id'] = get_the_id();
-	$rsvp_me["title"] = get_the_title();
-	$rsvp_me["description"] = $content;
-	$rsvp_me["featured_image"] = get_the_post_thumbnail(get_the_ID());
+	$event['id'] = get_the_id();
+	$event["title"] = get_the_title();
+	$event["description"] = $content;
+	$event["featured_image"] = get_the_post_thumbnail(get_the_ID());
 
 	foreach($fields as $field => $value){
-		$rsvp_me[$field] = get_post_meta($post->ID, '_rsvp_me_event_' . $field, true); 
+		$event[$field] = get_post_meta($post->ID, '_rsvp_me_event_' . $field, true); 
 	}
-	$rsvp_me["time"] = $rsvp_me["hour"] . ":" . $rsvp_me["minute"] . $rsvp_me["meridian"];
+	$event["time"] = $event["hour"] . ":" . $event["minute"] . $event["meridian"];
 
-	$content = buildTemplateFromValues(RSVP_ME_FILE_PATH . "/themes/default/event.html", $rsvp_me, false);
+	$event['accept_response'] = stripslashes(get_option("_rsvp_me_accept_response"));
+	$event['maybe_response'] = stripslashes(get_option("_rsvp_me_maybe_response"));
+	$event['decline_response'] = stripslashes(get_option("_rsvp_me_decline_response"));
+
+	if($event['maybe_response'] != "") $event['showMaybeResponse'] = true;
+	if($event['decline_response'] != "") $event['showDeclineResponse'] = true;
+
+	//$content = buildTemplateFromValues(RSVP_ME_FILE_PATH . "/themes/default/event.html", $rsvp_me, false);
+	$template = file_get_contents(RSVP_ME_FILE_PATH . "/themes/default/event.fmc");
+	$content = $foomanchu->render($template, $event, false);
 
 	return $content;
 }

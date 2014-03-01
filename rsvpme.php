@@ -19,6 +19,10 @@ $siteurl = get_option('siteurl');
 
 define('RSVP_ME_PLUGIN_URI', $siteurl . '/wp-content/plugins/rsvp-me');
 
+if(!defined($foomanchu)){
+	include (RSVP_ME_FILE_PATH . "/vendors/foomanchu/foomanchu.php");
+	$foomanchu = new FooManChu;
+}
 
 include (RSVP_ME_FILE_PATH . "/includes/rsvpme_functions.php");
 include (RSVP_ME_FILE_PATH . "/includes/rsvpme_widget.php");
@@ -72,7 +76,7 @@ function rsvp_me_footer(){ ?>
 	</div>
 
 	<div id="single_event_overview_tmpl" style="display:none">
-		<?php include RSVP_ME_FILE_PATH . "/themes/default/events.html"; ?>
+		<?php include RSVP_ME_FILE_PATH . "/themes/default/events.ftp"; ?>
 	</div>
   <?php
 }

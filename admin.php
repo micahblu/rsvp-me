@@ -153,6 +153,10 @@ function rsvp_me_settings(){ ?>
 		  		?>
 			  	</div>
 
+			  	<?php if($options[$i]['section'] == 'response_labels') : ?>
+			  		<p>* To disable maybe or decline response, just leave empty</p>
+			  	<?php endif; ?>
+			  	
 			  	<?php if($options[$i]['section'] == 'calendar') : ?>
 			  	<div class="rsvp-me-cal-sample">
 			  		<div id='rsvp_me_calendar_widget'>
