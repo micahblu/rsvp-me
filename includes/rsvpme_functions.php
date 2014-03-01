@@ -214,29 +214,29 @@ function get_rsvp_me_options(){
 	// load values or set defaults
 
 	for($i=0; $i < count($options); $i++){
-		for($j = 0; $j < count($options[$i]['fields']); $j++){
-			
-			// Set default values if they exist
-			//if(get_option("_" . $options[$i]['fields'][$j]['id'])){
+		for($j = 0; $j < count($options[$i]['fields']); $j++){			
 			$options[$i]['fields'][$j]['value'] = stripslashes(get_option("_" . $options[$i]['fields'][$j]['id']));
-			//}
 		}
 	}
 	return $options;
 }
 
-function get_rsvp_me_option_values(){
+function get_rsvp_me_calendar_settings(){
 	$options = get_rsvp_me_options();
-
 	$nv_pairs = array(); //name value pairs
-	foreach($options as $option){
-		$nv_pairs[$option['id']] = $option['default'];
+	for($i=0; $i < count($options); $i ++){
+		if($options[$i]['section'] !== 'calendar') continue;
+
+		foreach($options[$i]['fields'] as $key => $field){
+			//echo $field['id'] , " = " . $field['value'] . "<br />";
+			$nv_pairs[$field['id']] = $field['value'];
+		}
 	}
 	return $nv_pairs;
 }
 
 function rsvp_me_calendar_styles(){ 
-	$settings = get_rsvp_me_option_values();
+	$settings = get_rsvp_me_calendar_settings();
 	?>
 	<style>
 

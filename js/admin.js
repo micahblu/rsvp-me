@@ -16,40 +16,24 @@
    	$(this).addClass("nav-tab-active");
    	
    	$("#"+this.id.replace(/(\-[0-9]+)/, '-content$1')).show();
-   	return;
-		//if($(this).find(".tab-me-link").attr("class") != "tab-me-link"){
-		//switch_tabs($(this));
-		//}
-
 	});
 
-	function switch_tabs(obj) {
-
-		obj.parent().parent().find('.tab-me-tab-content').hide();
-		obj.parent().find('li').removeClass("active");
-
-		var id = obj.find("a", 0).attr("rel");
-
-		$('#'+id).show();
-
-		obj.addClass("active");
-	}
-
 	/**
-	 * Setup our setting ajaax submit 
+	 * Setup our setting ajax submit 
 	 * @since 1.9.2
 	 */
-	$("#rsvp_me_settings_form").submit(function(e){
+	$("#rsvp-me-submit-settings").on('click', function(e){
 		e.preventDefault();
 
 		var data = { action : 'rsvp_me_update_settings' };
 
-		$("#rsvp_me_settings_form input").each(function(index){
-			//console.log(this.name + " = " + this.value);
+		$("#rsvp-me-admin input").each(function(index){
 			if(this.type != "submit" && /rsvp_me(.*)/.test(this.name)){
 				data[this.name] = this.value;
 			}
 		});
+
+		//console.log(data);
 
 		$.post(ajaxurl, data, function(data){
 			console.log(data);

@@ -37,6 +37,7 @@
 
 .tab-panel{
 	display:none;
+	padding: 1em;
 }
 
 #tab-content-0{

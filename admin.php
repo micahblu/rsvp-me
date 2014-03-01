@@ -82,14 +82,10 @@ function rsvp_me_menu() {
 function rsvp_me_update_settings(){
 
 	foreach($_POST as $field => $value){
-		if($field != "action"){
-			if(!get_option("_" . $field)){
+		if($field != "action"){;
+			// Try update, if fails, add option
+			if(!update_option("_" . $field, $value)){
 				add_option("_" . $field, $value);
-
-				$msg[] = "added " . $field . " = " . $value;
-			}else{
-				update_option("_" . $field, $value);
-				$msg[] = "updated " . $field . " = " . $value;
 			}
 		}
 	}
@@ -105,14 +101,13 @@ function rsvp_me_update_settings(){
  * @return null
  */
 function rsvp_me_settings(){ ?>
-		
-  <header id="rsvp-me-admin-header">
-  	<img src="<?php echo plugins_url(); ?>/rsvp-me/images/rsvp-me-logo-r.png" class="icon24 rsvp-me-logo" alt="RSVP ME" /> <h2>RSVP ME Settings</h2>
-  </header>
+	<div id="rsvp-me-admin">
+	  <header id="rsvp-me-admin-header">
+	  	<img src="<?php echo plugins_url(); ?>/rsvp-me/images/rsvp-me-logo-r.png" class="icon24 rsvp-me-logo" alt="RSVP ME" /> <h2>RSVP ME Settings</h2>
+	  </header>
 
-  <br style="clear:both" />
+	  <br style="clear:both" />
 
-	<form id="rsvp_me_settings_form" method="post">
 		<?php $options = get_rsvp_me_options(); //die(print_r($options)); ?>
 		<div class="tab-navigation">
 	    <h2 class="nav-tab-wrapper">
@@ -124,52 +119,59 @@ function rsvp_me_settings(){ ?>
 		</div><!-- .tab-navigation -->
 
 		<div class="tab-contents">
-		<?php for($i=0; $i < count($options); $i++) : ?>
-  		<?php $fields = $options[$i]['fields']; ?>
-	  	<div class="tab-panel" id="tab-content-<?php echo $i ?>">
-		  	<div class="<?php echo $options[$i]['section'] == 'calendar' ? 'rsvp-me-cal-options' : ''?>">
+			<?php for($i=0; $i < count($options); $i++) : ?>
+	  		<?php $fields = $options[$i]['fields']; ?>
+		  	<div class="tab-panel" id="tab-content-<?php echo $i ?>">
+			  	<div class="<?php echo $options[$i]['section'] == 'calendar' ? 'rsvp-me-cal-options' : ''?>">
 		  		<?php
-		  			foreach($fields as $field){
+	  			foreach($fields as $field){
 
-		  				switch($field["type"]){
+	  				switch($field["type"]){
 
-		  					case "text" : ?>
-		  						<p>
-						  			<label for="rsvp_calendar_background"><?php echo $field["name"]; ?></label><br />
-						  			<input type="text" name="<?php echo $field["id"] ?>" value="<?php echo $field['value']; ?>" />
-						  		</p>
-		  					<?php break;
+	  					case "text" : ?>
+	  						<p>
+					  			<label for="rsvp_calendar_background"><?php echo $field["name"]; ?></label><br />
+					  			<input type="text" name="<?php echo $field["id"] ?>" value="<?php echo $field['value']; ?>" />
+					  		</p>
+	  					<?php break;
 
-		  					case "radio" : ?>
-		  						<p>
-						  			<label for="rsvp_calendar_background"><?php echo $field["name"]; ?></label><br />
-						  			<input type="radio" name="<?php echo $field["id"] ?>" selected="<?php echo $field['value']; ?>" />
-						  		</p>
-		  					<?php break;
+	  					case "radio" : ?>
+	  						<p>
+					  			<label for="rsvp_calendar_background"><?php echo $field["name"]; ?></label><br />
+					  			<input type="radio" name="<?php echo $field["id"] ?>" selected="<?php echo $field['value']; ?>" />
+					  		</p>
+	  					<?php break;
 
-		  					case "color" : ?>
-		  						<p>
-						  			<label for="rsvp_calendar_background"><?php echo $field["name"]; ?></label><br />
-						  			<input type="text" name="<?php echo $field["id"] ?>" value="<?php echo $field['value']; ?>" class="rsvp-me-color-field" data-default-color="<?php echo $field['value']; ?>" />
-						  		</p>
-		  					<?php break;
-		  				}
-		  			}
+	  					case "color" : ?>
+	  						<p>
+					  			<label for="rsvp_calendar_background"><?php echo $field["name"]; ?></label><br />
+					  			<input type="text" name="<?php echo $field["id"] ?>" value="<?php echo $field['value']; ?>" class="rsvp-me-color-field" data-default-color="<?php echo $field['value']; ?>" />
+					  		</p>
+	  					<?php break;
+	  				}
+	  			}
 		  		?>
-		  	</div>
+			  	</div>
 
-		  	<br style="clear:both" />
-		  	
-			  <p><input class="button" type="submit" value="Update settings" /></p>
-			  <div class="rsvp-me-alert-msg"></div>
-
-		  </div><!-- .tab-panel -->
+			  	<?php if($options[$i]['section'] == 'calendar') : ?>
+			  	<div class="rsvp-me-cal-sample">
+			  		<div id='rsvp_me_calendar_widget'>
+							<?php rsvp_me_draw_calendar(array(date("Y-m-d") => array()));  ?>
+						</div><!-- #rsvp_me_calendar_widget -->
+			  	</div>
+				  <?php endif; ?>
+		  	</div><!-- .tab-panel -->
 		  <?php endfor; ?>
-		  </div><!-- .tab-contents -->
+		</div><!-- .tab-contents -->
+		
+		<br style="clear:both" />
+		  	
+	  <button class="button" id="rsvp-me-submit-settings">Update settings</button>
 
-		  <p>Be sure to checkout my other great <a target="_blank" href="http://micahblu.com/products">Themes & Plugins</a></p> 		
+	  <div class="rsvp-me-alert-msg"></div>
+		<p>Be sure to checkout my other great <a target="_blank" href="http://micahblu.com/products">Themes & Plugins</a></p> 		
 
-		</form>
+	</div><!-- #rsvp-me-admin -->
 <?php }
 
 ?>
