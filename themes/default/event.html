@@ -27,9 +27,9 @@
 				<input class="reqd" type="text" name="email" />
 			</p>
 			<p>
-				<input type="radio" name="response" value="accepted"> I'm Definitely coming!<br>
-				<input type="radio" name="response" value="maybe"> I might come.<br>
-				<input type="radio" name="response" value="declined"> Sorry can't make it.<br>
+				<input type="radio" name="response" value="accepted"> [[accept_response]]<br />
+				[[#if showMaybeResponse]]<input type="radio" name="response" value="maybe"> [[maybe_response]]<br />[[/if]]
+				[[#if showDeclineResponse]]<input type="radio" name="response" value="declined"> [[decline_response]]<br />[[/if]]
 			</p>
 			<p>Want to send an additional message?<br>
 			

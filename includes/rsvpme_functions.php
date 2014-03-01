@@ -82,6 +82,15 @@ function get_rsvp_event_by_id($id){
 	if(!empty($image_array)){
 		$event["featured_image_src"] = $image_array[0];
 	}
+
+	// add custom event labels
+	$event['accept_response'] = stripslashes(get_option("_rsvp_me_accept_response"));
+	$event['maybe_response'] = stripslashes(get_option("_rsvp_me_maybe_response"));
+	$event['decline_response'] = stripslashes(get_option("_rsvp_me_decline_response"));
+
+	if($event['maybe_response'] != "") $event['showMaybeResponse'] = true;
+	if($event['decline_response'] != "") $event['showDeclineResponse'] = true;
+	
 	return $event;
 }
 
@@ -228,7 +237,6 @@ function get_rsvp_me_calendar_settings(){
 		if($options[$i]['section'] !== 'calendar') continue;
 
 		foreach($options[$i]['fields'] as $key => $field){
-			//echo $field['id'] , " = " . $field['value'] . "<br />";
 			$nv_pairs[$field['id']] = $field['value'];
 		}
 	}
