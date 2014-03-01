@@ -31,8 +31,11 @@ register_activation_hook( __FILE__, 'rsvp_me_install' );
 * Admin Specific Actions
 */
 if( is_admin() ){
+
 	/* cms scripts */
 	include_once (RSVP_ME_FILE_PATH . "/admin.php");
+	wp_enqueue_style("rsvpMeAdminStyles", RSVP_ME_PLUGIN_URI . "/admin.css");	
+
 }
 
 /**
@@ -41,6 +44,7 @@ if( is_admin() ){
 function add_styles() {
 	wp_register_style("rsvpMeStyles", RSVP_ME_PLUGIN_URI . "/rsvpme.css");
 	wp_enqueue_style("rsvpMeStyles");
+
 }
 
 add_action('wp_print_styles', 'add_styles');

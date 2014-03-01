@@ -85,6 +85,7 @@ function rsvp_me_update_settings(){
 		if($field != "action"){
 			if(!get_option("_" . $field)){
 				add_option("_" . $field, $value);
+
 				$msg[] = "added " . $field . " = " . $value;
 			}else{
 				update_option("_" . $field, $value);
@@ -92,8 +93,7 @@ function rsvp_me_update_settings(){
 			}
 		}
 	}
-
-	echo json_encode(array("success" => true));
+	echo json_encode(array("success" => true, "message" => $msg));
 }	
 
 /**
@@ -104,76 +104,72 @@ function rsvp_me_update_settings(){
  * @param null
  * @return null
  */
-function rsvp_me_settings(){
-
-	$options = get_rsvp_me_options();
-	?>
-  <img src="<?php echo plugins_url(); ?>/rsvp-me/images/rsvp-me-logo-r.png" class="icon32" alt="RSVP ME" /> <h2>RSVP ME Settings</h2>
- 	
- 	<div style="float:left; margin-left: 10px;">
- 		  Want more options and features? <strong><a target="_blank" href="http://micahblu.com/products/rsvp-me-events-pro/">Go Pro</a></strong></p>
- 	</div>
+function rsvp_me_settings(){ ?>
+		
+  <header id="rsvp-me-admin-header">
+  	<img src="<?php echo plugins_url(); ?>/rsvp-me/images/rsvp-me-logo-r.png" class="icon24 rsvp-me-logo" alt="RSVP ME" /> <h2>RSVP ME Settings</h2>
+  </header>
 
   <br style="clear:both" />
-  
-  <form id="rsvp_me_settings_form" method="post">
 
-  	<style>
-  	.rsvp-me-cal-options{
-  		float:left;
-  		margin-right: 15px;
-  		width: 300px;
-  	}
-  	.rsvp-me-cal-sample{
-  		float:left;
-  	}
-  	.rsvp-me-alert-box{
-			display:block;
-			width: intrinsic;
-			padding: 10px;
-		}
+	<form id="rsvp_me_settings_form" method="post">
+		<?php $options = get_rsvp_me_options(); //die(print_r($options)); ?>
+		<div class="tab-navigation">
+	    <h2 class="nav-tab-wrapper">
 
-		.success{
-			background-color: #5da423;
-		}
+			<?php for($i=0; $i < count($options); $i++) : ?>
+				<a class="nav-tab <?php echo $i==0 ? 'nav-tab-active' : '' ?>" id="tab-<?php echo $i ?>"><?php echo $options[$i]['heading']; ?></a>
+			<?php endfor; ?>
+			</h2>
+		</div><!-- .tab-navigation -->
 
-		.error, .alert{
-			background-color: #c60f13;
-		}
-  	</style>
-  	<p><strong>Calendar Styles</strong></p>
-  	<div class="panel">
-	  	<div class="rsvp-me-cal-options">
-	  		<?php
-	  			foreach($options as $option){
+		<div class="tab-contents">
+		<?php for($i=0; $i < count($options); $i++) : ?>
+  		<?php $fields = $options[$i]['fields']; ?>
+	  	<div class="tab-panel" id="tab-content-<?php echo $i ?>">
+		  	<div class="<?php echo $options[$i]['section'] == 'calendar' ? 'rsvp-me-cal-options' : ''?>">
+		  		<?php
+		  			foreach($fields as $field){
 
-	  				switch($option["type"]){
+		  				switch($field["type"]){
 
-	  					case "color" : ?>
-	  						<p>
-					  			<label for="rsvp_calendar_background"><?php echo $option["name"]; ?></label><br />
-					  			<input type="text" name="<?php echo $option["id"] ?>" value="<?php echo $option['default']; ?>" class="rsvp-me-color-field" data-default-color="<?php echo $option['default']; ?>" />
-					  		</p>
-	  					<?php break;
-	  				}
-	  			}
-	  		?>
-	  	</div>
+		  					case "text" : ?>
+		  						<p>
+						  			<label for="rsvp_calendar_background"><?php echo $field["name"]; ?></label><br />
+						  			<input type="text" name="<?php echo $field["id"] ?>" value="<?php echo $field['value']; ?>" />
+						  		</p>
+		  					<?php break;
 
-	  	<div class="rsvp-me-cal-sample">
-	  		<div id='rsvp_me_calendar_widget'>   
-					<?php rsvp_me_draw_calendar(array(date("Y-m-d") => array()));  ?>
-				</div><!-- #rsvp_me_calendar_widget -->
-	  	</div>
-	  </div>
-  	<br style="clear:both" />
-  	
-	  <p><input class="button" type="submit" value="Update settings" /></p>
-	  <div class="rsvp-me-alert-msg"></div>
+		  					case "radio" : ?>
+		  						<p>
+						  			<label for="rsvp_calendar_background"><?php echo $field["name"]; ?></label><br />
+						  			<input type="radio" name="<?php echo $field["id"] ?>" selected="<?php echo $field['value']; ?>" />
+						  		</p>
+		  					<?php break;
 
-	  <p>Be sure to checkout my other great <a target="_blank" href="http://micahblu.com/products">Themes & Plugins</a></p> 		
+		  					case "color" : ?>
+		  						<p>
+						  			<label for="rsvp_calendar_background"><?php echo $field["name"]; ?></label><br />
+						  			<input type="text" name="<?php echo $field["id"] ?>" value="<?php echo $field['value']; ?>" class="rsvp-me-color-field" data-default-color="<?php echo $field['value']; ?>" />
+						  		</p>
+		  					<?php break;
+		  				}
+		  			}
+		  		?>
+		  	</div>
 
-	</form>
+		  	<br style="clear:both" />
+		  	
+			  <p><input class="button" type="submit" value="Update settings" /></p>
+			  <div class="rsvp-me-alert-msg"></div>
+
+		  </div><!-- .tab-panel -->
+		  <?php endfor; ?>
+		  </div><!-- .tab-contents -->
+
+		  <p>Be sure to checkout my other great <a target="_blank" href="http://micahblu.com/products">Themes & Plugins</a></p> 		
+
+		</form>
 <?php }
 
 ?>

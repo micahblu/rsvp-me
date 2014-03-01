@@ -5,6 +5,36 @@
  */
 (function($){
 
+	/** 
+	 * Admin tabs
+   * @since 1.9.6
+   */
+   $('.nav-tab').click(function(){
+
+   	$(".tab-panel").hide();
+   	$(".nav-tab").removeClass("nav-tab-active");
+   	$(this).addClass("nav-tab-active");
+   	
+   	$("#"+this.id.replace(/(\-[0-9]+)/, '-content$1')).show();
+   	return;
+		//if($(this).find(".tab-me-link").attr("class") != "tab-me-link"){
+		//switch_tabs($(this));
+		//}
+
+	});
+
+	function switch_tabs(obj) {
+
+		obj.parent().parent().find('.tab-me-tab-content').hide();
+		obj.parent().find('li').removeClass("active");
+
+		var id = obj.find("a", 0).attr("rel");
+
+		$('#'+id).show();
+
+		obj.addClass("active");
+	}
+
 	/**
 	 * Setup our setting ajaax submit 
 	 * @since 1.9.2
@@ -15,13 +45,14 @@
 		var data = { action : 'rsvp_me_update_settings' };
 
 		$("#rsvp_me_settings_form input").each(function(index){
+			//console.log(this.name + " = " + this.value);
 			if(this.type != "submit" && /rsvp_me(.*)/.test(this.name)){
 				data[this.name] = this.value;
 			}
 		});
 
 		$.post(ajaxurl, data, function(data){
-	
+			console.log(data);
 			if(data.slice(-1) == "0"){
 				data = data.slice(0, -1);
 			}

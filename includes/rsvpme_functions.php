@@ -135,46 +135,93 @@ function rsvp_me_calendar_widget($options = array()){
 
 function get_rsvp_me_options(){
 
-	$options[] = array(
-		'name' => 'Cell Background',
-		'desc' => '',
-		'id' => 'rsvp_me_table_cell_bg',
-		'default' => '#ffffff',
-		'type' => 'color' );
+	// Response Label options
+	$response_options = array(
+		'heading' => 'Response Labels',
+		'section' => 'response_labels',
+		'fields' =>	array(
+			array(
+				'name' => 'Show Maybe Response',
+				'desc' => '',
+				'id' => 'rsvp_me_show_maybe_response',
+				'default' => 'checked',
+				'type' => 'checkbox'
+			),
+		  array(
+				'name' => 'Accept Response Label',
+				'desc' => '',
+				'id' => 'rsvp_me_accept_response',
+				'default' => "I'm Definitely coming!",
+				'type' => 'text'
+			),
+			array(
+				'name' => 'Maybe Response Label',
+				'desc' => '',
+				'id' => 'rsvp_me_maybe_response',
+				'default' => "I might come",
+				'type' => 'text'
+			),
+			array(
+				'name' => 'Decline Response Label',
+				'desc' => '',
+				'id' => 'rsvp_me_decline_response',
+				'default' => "Sorry Can't make it",
+				'type' => 'text'
+			)
+		)
+	);
 
-	$options[] = array(
-		'name' => 'Border Color',
-		'desc' => '',
-		'id' => 'rsvp_me_table_border_color',
-		'default' => '#cccccc',
-		'type' => 'color' );
+	// Calendar options
+	$calendar_options = array(
+		'heading' => 'Manage Calendar Styles',
+		'section' => 'calendar',
+		'fields' =>	array(
+			array(
+				'name' => 'Cell Background',
+				'desc' => '',
+				'id' => 'rsvp_me_table_cell_bg',
+				'default' => '#ffffff',
+				'type' => 'color'
+			),
+			array(
+				'name' => 'Border Color',
+				'desc' => '',
+				'id' => 'rsvp_me_table_border_color',
+				'default' => '#cccccc',
+				'type' => 'color'
+			),
+			array(
+				'name' => 'Font Color',
+				'desc' => '',
+				'id' => 'rsvp_me_table_cell_color',
+				'default' => '#333333',
+				'type' => 'color'
+			),
+			array(
+				'name' => 'Event Day Background',
+				'desc' => '',
+				'id' => 'rsvp_me_table_event_bg',
+				'default' => '#ffffcc',
+				'type' => 'color'
+			)
+		)
+	);
 
-	$options[] = array(
-		'name' => 'Font Color',
-		'desc' => '',
-		'id' => 'rsvp_me_table_cell_color',
-		'default' => '#333333',
-		'type' => 'color' );
-
-	$options[] = array(
-		'name' => 'Event Day Background',
-		'desc' => '',
-		'id' => 'rsvp_me_table_event_bg',
-		'default' => '#ffffcc',
-		'type' => 'color' );
+	$options[] = $response_options;
+	$options[] = $calendar_options;
 
 
 	// load values or set defaults
 
 	for($i=0; $i < count($options); $i++){
-
-		if(get_option("_" . $options[$i]['id'])){
-
-			//echo $options[$i]['name'] . " = " . get_option("_" . $options[$i]['id']) . "<br />";	
-			$options[$i]['default'] = get_option("_" . $options[$i]['id']);
+		for($j = 0; $j < count($options[$i]['fields']); $j++){
+			
+			// Set default values if they exist
+			//if(get_option("_" . $options[$i]['fields'][$j]['id'])){
+			$options[$i]['fields'][$j]['value'] = stripslashes(get_option("_" . $options[$i]['fields'][$j]['id']));
+			//}
 		}
 	}
-
 	return $options;
 }
 
