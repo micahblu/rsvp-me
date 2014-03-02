@@ -72,11 +72,11 @@ function rsvp_me_footer(){ ?>
 		var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
 	</script>
 	<div id="event_form_wrapper" style="display:none">
-		<?php include RSVP_ME_FILE_PATH . "/themes/default/event-overlay.html"; ?>
+		<?php include RSVP_ME_FILE_PATH . "/themes/default/event-overlay.fmc"; ?>
 	</div>
 
 	<div id="single_event_overview_tmpl" style="display:none">
-		<?php include RSVP_ME_FILE_PATH . "/themes/default/events.ftp"; ?>
+		<?php include RSVP_ME_FILE_PATH . "/themes/default/events.fmc"; ?>
 	</div>
   <?php
 }

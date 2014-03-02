@@ -255,7 +255,7 @@ var rsvpMe; // put our namespace in global scope
 
 		var ifmatches = tmpl.match(/\[{2}#if(.[^\]]+)\]\](.*)\[{2}\/if\]{2}/gmi);
 
-		if(ifmatches.length > 0){
+		if(ifmatches && ifmatches.length > 0){
 
 			for(var i = 0; i <  ifmatches.length; i++){
 
