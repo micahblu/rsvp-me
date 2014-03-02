@@ -77,13 +77,11 @@ var rsvpMe; // put our namespace in global scope
 		
 		submitRsvp : function(id){
 
-			console.log("hit");
 
 			var valid=true;
 			var selected = 0;
 			var fields = {};
-			//alert($"#rsvp_form_"+id));
-			//var form = document.getElementById("rsvp_form_"+id);
+
 			$("#rsvp_form_"+id + " input").each(function(index){
 				
 				if(this.name == "rsvp_event_id"){
@@ -107,6 +105,7 @@ var rsvpMe; // put our namespace in global scope
 					}
 				}
 			});
+
 
 			if(!valid || selected < 1){
 				alert("Please fill all required fields");
@@ -255,7 +254,7 @@ var rsvpMe; // put our namespace in global scope
 
 		var ifmatches = tmpl.match(/\[{2}#if(.[^\]]+)\]\](.*)\[{2}\/if\]{2}/gmi);
 
-		if(ifmatches && ifmatches.length > 0){
+		if(ifmatches.length > 0){
 
 			for(var i = 0; i <  ifmatches.length; i++){
 
