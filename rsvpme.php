@@ -3,7 +3,7 @@
 Plugin Name: RSVP Me!
 Plugin URI: http://www.micahblu.com/products/rsvp-me
 Description: A Robust RSVP plugin 
-Version: 1.9.5
+Version: 1.9.6
 Author: Micah Blu
 Author URI: http://www.micahblu.com
 License: GPL2
@@ -19,10 +19,9 @@ $siteurl = get_option('siteurl');
 
 define('RSVP_ME_PLUGIN_URI', $siteurl . '/wp-content/plugins/rsvp-me');
 
-if(!defined($foomanchu)){
-	include (RSVP_ME_FILE_PATH . "/vendors/foomanchu/foomanchu.php");
-	$foomanchu = new FooManChu;
-}
+include (RSVP_ME_FILE_PATH . "/vendors/foomanchu.php");
+
+$foomanchu = new FooManChu;
 
 include (RSVP_ME_FILE_PATH . "/includes/rsvpme_functions.php");
 include (RSVP_ME_FILE_PATH . "/includes/rsvpme_widget.php");
@@ -38,32 +37,27 @@ if( is_admin() ){
 
 	/* cms scripts */
 	include_once (RSVP_ME_FILE_PATH . "/admin.php");
-	wp_enqueue_style("rsvpMeAdminStyles", RSVP_ME_PLUGIN_URI . "/admin.css");	
+	
+	function rsvp_me_admin_assets(){
+		wp_enqueue_style("rsvpMeAdminStyles", RSVP_ME_PLUGIN_URI . "/admin.css");	
+	}
 
+	add_action('wp_enqueue_style', 'rsvp_me_admin_assets');
 }
 
-/**
- * add default styles 
- */
-function add_styles() {
-	wp_register_style("rsvpMeStyles", RSVP_ME_PLUGIN_URI . "/rsvpme.css");
-	wp_enqueue_style("rsvpMeStyles");
 
-}
-
-add_action('wp_print_styles', 'add_styles');
-
-function rsvp_me_scripts(){
+function rsvp_me_assets(){
+		
+	wp_enqueue_style("rsvpMeStyles", RSVP_ME_PLUGIN_URI . "/rsvpme.css");
 
 	wp_enqueue_script("jquery");
 	wp_enqueue_script("jquery-ui", RSVP_ME_PLUGIN_URI . "/js/jquery-ui.js", "jquery", null, true);
 	wp_enqueue_script("lightbox", RSVP_ME_PLUGIN_URI . "/js/jquery.lightbox_me.js", "jquery", null, true);
 	
 	/* rsvm me scripts */
-	//wp_enqueue_script("handlebars", RSVP_ME_PLUGIN_URI . "/js/vendors/handlebars.js", null, null, true);
 	wp_enqueue_script("rsvp-me", RSVP_ME_PLUGIN_URI . "/js/rsvp_me.js", null, null, true);
 }
-add_action('wp_head', 'rsvp_me_scripts');	
+add_action('wp_enqueue_style', 'rsvp_me_assets');
 
 function rsvp_me_footer(){ ?>
   <script type='text/javascript'>
