@@ -80,8 +80,9 @@ function rsvp_me_menu() {
 }
 
 function rsvp_me_update_settings(){
-
+	$msg = '';
 	foreach($_POST as $field => $value){
+		
 		if($field != "action"){;
 			// Try update, if fails, add option
 			if(!update_option("_" . $field, $value)){

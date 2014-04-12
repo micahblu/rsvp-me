@@ -9,13 +9,15 @@
 	 * Admin tabs
    * @since 1.9.6
    */
-   $('.nav-tab').click(function(){
 
-   	$(".tab-panel").hide();
-   	$(".nav-tab").removeClass("nav-tab-active");
-   	$(this).addClass("nav-tab-active");
-   	
-   	$("#"+this.id.replace(/(\-[0-9]+)/, '-content$1')).show();
+	$('.nav-tab').click(function(){
+
+		$(".tab-panel").hide();
+		$(".nav-tab").removeClass("nav-tab-active");
+		$(this).addClass("nav-tab-active");
+
+		$("#"+this.id.replace(/(\-[0-9]+)/, '-content$1')).show();
+
 	});
 
 	/**

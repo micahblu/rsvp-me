@@ -3,13 +3,13 @@
 Plugin Name: RSVP Me!
 Plugin URI: http://www.micahblu.com/products/rsvp-me
 Description: A Robust RSVP plugin 
-Version: 1.9.6
+Version: 1.9.7
 Author: Micah Blu
 Author URI: http://www.micahblu.com
 License: GPL2
 */
 
-define('RSVP_ME_VERSION', '1.9.5');
+define('RSVP_ME_VERSION', '1.9.7');
 
 define('RSVP_ME_FILE_PATH', dirname(__FILE__));
 
@@ -37,12 +37,13 @@ if( is_admin() ){
 
 	/* cms scripts */
 	include_once (RSVP_ME_FILE_PATH . "/admin.php");
-	
+
 	function rsvp_me_admin_assets(){
+	
 		wp_enqueue_style("rsvpMeAdminStyles", RSVP_ME_PLUGIN_URI . "/admin.css");	
 	}
 
-	add_action('wp_enqueue_style', 'rsvp_me_admin_assets');
+	add_action('admin_head', 'rsvp_me_admin_assets');
 }
 
 
