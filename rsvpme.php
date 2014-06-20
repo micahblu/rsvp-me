@@ -1,4 +1,4 @@
-<?php
+	<?php
 /*
 Plugin Name: RSVP Me!
 Plugin URI: http://www.micahblu.com/products/rsvp-me
@@ -48,7 +48,7 @@ if( is_admin() ){
 
 
 function rsvp_me_assets(){
-		
+
 	wp_enqueue_style("rsvpMeStyles", RSVP_ME_PLUGIN_URI . "/rsvpme.css");
 
 	wp_enqueue_script("jquery");
@@ -56,9 +56,10 @@ function rsvp_me_assets(){
 	wp_enqueue_script("lightbox", RSVP_ME_PLUGIN_URI . "/js/jquery.lightbox_me.js", "jquery", null, true);
 	
 	/* rsvm me scripts */
-	wp_enqueue_script("rsvp-me", RSVP_ME_PLUGIN_URI . "/js/rsvp_me.js", null, null, true);
+	wp_enqueue_script("rsvp-me", RSVP_ME_PLUGIN_URI . "/js/rsvp_me.js", null, null, false);
 }
-add_action('wp_enqueue_style', 'rsvp_me_assets');
+
+add_action('wp_enqueue_scripts', 'rsvp_me_assets');
 
 function rsvp_me_footer(){ ?>
   <script type='text/javascript'>
