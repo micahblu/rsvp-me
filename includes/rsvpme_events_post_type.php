@@ -339,6 +339,7 @@ function rsvp_me_event_page($content){
 	$template = file_get_contents(RSVP_ME_FILE_PATH . "/themes/default/event.fmc");
 	$content = $foomanchu->render($template, $event, false);
 
+	die($content);
 	return $content;
 }
 

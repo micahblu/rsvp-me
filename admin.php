@@ -42,6 +42,7 @@ function rsvp_me_register_admin_scripts(){
 	wp_enqueue_style("jquery-ui-css", RSVP_ME_PLUGIN_URI . "/js/jquery-ui.css");
 	wp_enqueue_script("rsvp-admin", RSVP_ME_PLUGIN_URI . "/js/admin.js", "jquery", null, true);
 
+	wp_enqueue_style("rsvp-admin-css", RSVP_ME_PLUGIN_URI . "/admin.css");
 	wp_enqueue_style( 'wp-color-picker' );
 	wp_enqueue_script( 'my-script-handle', plugins_url('js/admin.js', __FILE__ ), array( 'wp-color-picker' ), false, true );
 }
@@ -122,7 +123,7 @@ function rsvp_me_settings(){ ?>
 		<div class="tab-contents">
 			<?php for($i=0; $i < count($options); $i++) : ?>
 	  		<?php $fields = $options[$i]['fields']; ?>
-		  	<div class="tab-panel" id="tab-content-<?php echo $i ?>">
+		  	<div class="tab-panel" id="tab-content-<?php echo $i ?>" <?php echo $i > 0 ? 'style="display:none"' : "" ?>>
 			  	<div class="<?php echo $options[$i]['section'] == 'calendar' ? 'rsvp-me-cal-options' : ''?>">
 		  		<?php
 	  			foreach($fields as $field){
@@ -159,12 +160,12 @@ function rsvp_me_settings(){ ?>
 			  	<?php endif; ?>
 			  	
 			  	<?php if($options[$i]['section'] == 'calendar') : ?>
-			  	<div class="rsvp-me-cal-sample">
-			  		<div id='rsvp_me_calendar_widget'>
+				  	<div class="rsvp-me-cal-sample">
+				  		<div id='rsvp_me_calendar_widget'>
 							<?php rsvp_me_draw_calendar(array(date("Y-m-d") => array()));  ?>
 						</div><!-- #rsvp_me_calendar_widget -->
-			  	</div>
-				  <?php endif; ?>
+				  	</div>
+				<?php endif; ?>
 		  	</div><!-- .tab-panel -->
 		  <?php endfor; ?>
 		</div><!-- .tab-contents -->
@@ -177,6 +178,4 @@ function rsvp_me_settings(){ ?>
 		<p>Be sure to checkout my other great <a target="_blank" href="http://micahblu.com/products">Themes & Plugins</a></p> 		
 
 	</div><!-- #rsvp-me-admin -->
-<?php }
-
-?>
+<?php } ?>

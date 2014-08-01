@@ -186,6 +186,7 @@ var rsvpMe; // put our namespace in global scope
 				this.curmonth = date.getMonth() + 1;
 				this.curyear = date.getFullYear();
 			}
+
 			this.curmonth = (this.curmonth > 1) ? (this.curmonth - 1) : 12;
 			this.curyear = (this.curmonth == 12) ? (this.curyear - 1) : this.curyear;
 			this.updateMonth();
@@ -249,8 +250,8 @@ var rsvpMe; // put our namespace in global scope
 
 	function renderTemplate(tmpl, obj){
 		var reg,
-			  maxattempts = 50,
-				i = 0;
+			maxattempts = 50,
+			i = 0;
 
 		var ifmatches = tmpl.match(/\[{2}#if(.[^\]]+)\]\](.*)\[{2}\/if\]{2}/gmi);
 
@@ -274,6 +275,7 @@ var rsvpMe; // put our namespace in global scope
 				}else{
 					tmpl = tmpl.replace(parts[0], contents);
 				}
+
 			}
 		}
 
@@ -290,6 +292,8 @@ var rsvpMe; // put our namespace in global scope
 				}
 			}
 		}
+
+		tmpl = tmpl.replace(/\[\[.+\]\]/g, '');
 
 		return tmpl;
 

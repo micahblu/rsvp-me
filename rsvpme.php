@@ -1,4 +1,4 @@
-	<?php
+<?php
 /*
 Plugin Name: RSVP Me!
 Plugin URI: http://www.micahblu.com/products/rsvp-me
@@ -17,7 +17,7 @@ define('RSVP_ME_DIR_NAME', basename(RSVP_ME_FILE_PATH));
 
 $siteurl = get_option('siteurl'); 
 
-define('RSVP_ME_PLUGIN_URI', $siteurl . '/wp-content/plugins/rsvp-me');
+define('RSVP_ME_PLUGIN_URI', plugins_url() . "/rsvp-me");
 
 include (RSVP_ME_FILE_PATH . "/vendors/foomanchu.php");
 
@@ -64,7 +64,6 @@ add_action('wp_enqueue_scripts', 'rsvp_me_assets');
 function rsvp_me_footer(){ ?>
   <script type='text/javascript'>
 		var plugin_path = "<?php echo RSVP_ME_PLUGIN_URI ?>";
-		//var ajaxurl = "<?php echo str_replace(get_site_url(), "", admin_url('admin-ajax.php')); ?>";
 		var ajaxurl = "<?php echo admin_url('admin-ajax.php'); ?>";
 	</script>
 	<div id="event_form_wrapper" style="display:none">

@@ -70,10 +70,12 @@ class FooManChu{
 
 				// for now only support 'if'
 				if($statement == "if"){
+
 					$match = false;
 					foreach($symbols as $field => $value){
 						if($condition == $field) $match = true;
 					}
+					echo $statements[0][$i];
 					if($match){
 						$template = str_replace($statements[0][$i], $statements[3][$i], $template); 
 					}else{
@@ -98,6 +100,9 @@ class FooManChu{
 			$template = preg_replace_callback('/\[\[#[^if](.*)\]\]/', array(&$this, 'renderR'), $template);	
 		}
 
+		// clean up
+		$template = preg_replace('/\[\[.+?\]\]/', '', $template);
+		
 		// Finally replace any remove third brackets for escaped template tags
 		$template = preg_replace('/\[{3}/', '[[', $template);
 		$template = preg_replace('/\]{3}/', ']]', $template);

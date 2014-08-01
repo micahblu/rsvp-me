@@ -299,14 +299,14 @@ function rsvp_me_calendar_styles(){
 
 function rsvp_me_draw_calendar($events=NULL, $month=NULL, $year=NULL, $settings=NULL){
 	/**
-		Changelog:
-		-added div wrapper
-		-added months array and header
-		-added settings array that can be passed to allow manipulation of basic calendar settings like classname & day headers
-		-added defaults for month/date/settings
-	
-		Notes:
-		$obj needed as wordpress passes the first parameter
+	 * Changelog:
+	 * -added div wrapper
+	 * -added months array and header
+	 * -added settings array that can be passed to allow manipulation of basic calendar settings like classname & day headers
+	 * -added defaults for month/date/settings
+     *
+ 	 * Notes:
+	 * $obj needed as wordpress passes the first parameter
 	*/
 
 	$year = $year ? $year : date("Y"); //default to current year
@@ -314,9 +314,10 @@ function rsvp_me_draw_calendar($events=NULL, $month=NULL, $year=NULL, $settings=
 	
 	if(!$settings){
 		//set the default settings
-		$settings = array("class" => "rsvp_me_calendar",
-						  "dayhead" => "short"
-						  );
+		$settings = array(
+			"class" => "rsvp_me_calendar",
+	    	"dayhead" => "short"
+	  	);
 	}
 	
 	$months = array(1=>"January", 2=>"February", 3=>"March", 4=>"April", 5=>"May", 6=>"June", 

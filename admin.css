@@ -44,3 +44,14 @@
 #tab-content-0{
 	display: block;
 }
+
+.rsvp-me-cal-options {
+	float:left;
+	box-sizing: border-box;
+	padding-right: 30px;
+}
+
+.rsvp-me-cal-sample {
+	float:left;
+	max-width: 300px;
+}
