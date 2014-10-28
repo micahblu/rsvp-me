@@ -9,6 +9,7 @@ function escapeRegExp(str) {
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
 var rsvpMe; // put our namespace in global scope
+console.log('hi');
 (function($){
 
 	rsvpMe = {
@@ -249,9 +250,12 @@ var rsvpMe; // put our namespace in global scope
 	}
 
 	function renderTemplate(tmpl, obj){
+		console.log('asdfasdfasdfsdf');
+		console.log(tmpl);
+
 		var reg,
-			maxattempts = 50,
-			i = 0;
+			  maxattempts = 50,
+			  i = 0;
 
 		var ifmatches = tmpl.match(/\[{2}#if(.[^\]]+)\]\](.*)\[{2}\/if\]{2}/gmi);
 
@@ -294,13 +298,8 @@ var rsvpMe; // put our namespace in global scope
 		}
 
 		tmpl = tmpl.replace(/\[\[.+\]\]/g, '');
-
 		return tmpl;
-
 	}
-
-
-
 
 	function stripslashes (str) {
 	  // +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)

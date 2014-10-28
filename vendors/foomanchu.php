@@ -40,6 +40,7 @@ class FooManChu{
 	 * @since 0.0.2
 	 */
 	public function __construct($options = array()){
+
 		$this->PartialsPath = isset($options['partials_path']) ? $options['partials_path'] : dirname(__FILE__);
 		$this->Ext = isset($options['template_ext']) ? $options['template_ext'] : 'fmc';
 	}
@@ -75,7 +76,7 @@ class FooManChu{
 					foreach($symbols as $field => $value){
 						if($condition == $field) $match = true;
 					}
-					echo $statements[0][$i];
+					//echo $statements[0][$i];
 					if($match){
 						$template = str_replace($statements[0][$i], $statements[3][$i], $template); 
 					}else{

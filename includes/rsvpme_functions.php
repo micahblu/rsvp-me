@@ -219,9 +219,7 @@ function get_rsvp_me_options(){
 	$options[] = $response_options;
 	$options[] = $calendar_options;
 
-
 	// load values or set defaults
-
 	for($i=0; $i < count($options); $i++){
 		for($j = 0; $j < count($options[$i]['fields']); $j++){			
 			$options[$i]['fields'][$j]['value'] = stripslashes(get_option("_" . $options[$i]['fields'][$j]['id']));
