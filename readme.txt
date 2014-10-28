@@ -3,8 +3,8 @@ Contributors: MicahBlu
 Donate link: http://micahblu.com/products/rsvp-me
 Tags: rsvp plugin, rsvp widget, event, rsvp events, rsvp calendar, Events, Event Calendar, Event Widget, widget, Event, Event plugin, organize, plan, venue, catering, planning, planner, organization, wedding, guestlist, reserve, reservations, reservation, byob
 Requires at least: 2.0.2
-Tested up to: 3.9.1
-Stable tag: 1.9.8
+Tested up to: 4.0
+Stable tag: 1.9.9
 
 == Description ==
 RSVP ME is a simple yet powerful Wordpress plugin which allows you to create events that your site visitors can RSVP to via the event's page or thorough a calendar widget. 
