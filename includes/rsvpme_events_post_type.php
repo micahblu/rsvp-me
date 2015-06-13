@@ -303,7 +303,7 @@ function rsvp_me_event_page($content){
 	global $post;
 	global $foomanchu;
 
-	if($post->post_type != "event" || !is_single($post) ) return $content;
+	if($post->post_type != "event" || !is_single($post) || post_password_required() ) return $content;
 
 	$fields = array(
 		'venue_name' => '', 
